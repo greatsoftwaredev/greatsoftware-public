@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import styles from './Footer.module.css'
 
 export function Footer() {
@@ -5,8 +6,8 @@ export function Footer() {
     <footer className={styles.footer}>
       <nav className={styles.links}>
         <a href="mailto:hello@greatsoftware.dev">hello@greatsoftware.dev</a>
-        <a href="/privacy">Privacy</a>
-        <a href="/terms">Terms</a>
+        <Link to="/privacy">Privacy</Link>
+        <Link to="/terms">Terms</Link>
       </nav>
       <p className={styles.copyright}>&copy; 2026 Great Software LLC</p>
     </footer>
