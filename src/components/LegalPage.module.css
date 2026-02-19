@@ -32,3 +32,33 @@
 .body p {
   margin-bottom: 16px;
 }
+
+.body h2 {
+  color: var(--color-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 36px;
+  margin-bottom: 12px;
+}
+
+.body h3 {
+  color: var(--color-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.body ul,
+.body ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+
+.body li {
+  margin-bottom: 6px;
+}
+
+.body strong {
+  color: var(--color-heading);
+}
