@@ -126,21 +126,21 @@ export function Logo({ className }: LogoProps) {
       </g>
 
       {/* === Trident / tuning-fork shape rising from center peak === */}
-      <g fill="none" stroke="url(#gs-trident-grad)" strokeWidth="2.5" strokeLinecap="round">
-        {/* Center prong */}
-        <line x1="100" y1="20" x2="100" y2="2" />
-        {/* Left prong */}
-        <path d="M100,28 L100,35 Q100,40 93,40 L90,40 L90,28" />
-        {/* Right prong */}
-        <path d="M100,28 L100,35 Q100,40 107,40 L110,40 L110,28" />
-        {/* Small crossbar at base of prongs */}
-        <line x1="88" y1="40" x2="112" y2="40" />
+      <g fill="none" stroke="url(#gs-trident-grad)" strokeWidth="2" strokeLinecap="round">
+        {/* Central stem from mountain peak downward */}
+        <line x1="100" y1="42" x2="100" y2="18" />
+        {/* Left prong — curves outward and upward */}
+        <path d="M100,32 Q92,32 89,24 L87,8" />
+        {/* Center prong — straight up */}
+        <line x1="100" y1="18" x2="100" y2="2" />
+        {/* Right prong — curves outward and upward */}
+        <path d="M100,32 Q108,32 111,24 L113,8" />
       </g>
 
-      {/* Trident tip details — small diamonds/dots */}
-      <circle cx="100" cy="2" r="2" fill="#7ec8e3" />
-      <circle cx="90" cy="28" r="1.5" fill="#7ec8e3" />
-      <circle cx="110" cy="28" r="1.5" fill="#7ec8e3" />
+      {/* Trident tip nodes */}
+      <circle cx="100" cy="2" r="2.2" fill="#7ec8e3" />
+      <circle cx="87" cy="8" r="1.8" fill="#7ec8e3" />
+      <circle cx="113" cy="8" r="1.8" fill="#7ec8e3" />
 
       {/* === Base line under mountains === */}
       <line
