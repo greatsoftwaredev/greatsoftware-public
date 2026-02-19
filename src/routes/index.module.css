@@ -1,0 +1,13 @@
+.products {
+  display: flex;
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 768px) {
+  .products {
+    flex-direction: column;
+  }
+}
