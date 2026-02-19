@@ -9,7 +9,7 @@ export function Logo({ className }: LogoProps) {
 
   return (
     <svg
-      viewBox="0 0 200 160"
+      viewBox="18 -3 164 128"
       xmlns="http://www.w3.org/2000/svg"
       className={combinedClass}
       role="img"
