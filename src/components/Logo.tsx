@@ -177,22 +177,22 @@ export function Logo({ className }: LogoProps) {
         </g>
       </g>
 
-      {/* === Trident / tuning-fork rising from center peak === */}
+      {/* === Trident — three straight prongs from a stem === */}
       <g fill="none" stroke="url(#gs-trident-grad)" strokeWidth="2.5" strokeLinecap="round">
-        {/* Central stem */}
-        <line x1="100" y1="38" x2="100" y2="14" />
-        {/* Left prong */}
-        <path d="M100,30 Q90,28 86,18 L84,5" />
+        {/* Stem rising from mountain peak */}
+        <line x1="100" y1="38" x2="100" y2="22" />
+        {/* Left prong — angled outward */}
+        <line x1="100" y1="22" x2="86" y2="3" />
         {/* Center prong — straight up */}
-        <line x1="100" y1="14" x2="100" y2="0" />
-        {/* Right prong */}
-        <path d="M100,30 Q110,28 114,18 L116,5" />
+        <line x1="100" y1="22" x2="100" y2="0" />
+        {/* Right prong — angled outward */}
+        <line x1="100" y1="22" x2="114" y2="3" />
       </g>
 
       {/* Trident tip nodes — glowing */}
       <circle cx="100" cy="0" r="2.5" fill="#a0daf0" />
-      <circle cx="84" cy="5" r="2" fill="#a0daf0" />
-      <circle cx="116" cy="5" r="2" fill="#a0daf0" />
+      <circle cx="86" cy="3" r="2" fill="#a0daf0" />
+      <circle cx="114" cy="3" r="2" fill="#a0daf0" />
 
       {/* === Subtle base line === */}
       <line
