@@ -1,0 +1,26 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../config/site";
+---
+<Layout title="About" description="How Great Software works — an independent software studio across products, client work, and research.">
+  <section class="mx-auto max-w-3xl px-6 pt-24 pb-16">
+    <p class="font-mono text-sm text-accent mb-4">About the studio</p>
+    <h1 class="text-4xl md:text-5xl tracking-tight">A whole range of software.</h1>
+    <div class="mt-8 flex flex-col gap-5 text-lg text-muted">
+      <p>{site.name} is an independent software studio. We take on a deliberately broad range of work — our own products, client and consulting builds, and research — and hold all of it to one standard: software that actually works in the real world.</p>
+      <p>Some of what we build, we run ourselves: live lead-generation systems, developer tooling, products with real users. Some we design and hand off. Some never ships at all — it's research that sharpens the next thing we build.</p>
+      <p>The common thread isn't a single product or a single market. It's range, and the craft to do each kind of work well.</p>
+    </div>
+
+    <h2 class="text-2xl mt-16 mb-6">How we work</h2>
+    <ol class="flex flex-col gap-6 list-none m-0 p-0">
+      <li><span class="font-mono text-sm text-accent">01 · build</span><p class="text-muted mt-1 mb-0">Start from the actual problem. Pick the smallest thing that proves the idea, then make it real.</p></li>
+      <li><span class="font-mono text-sm text-accent">02 · ship</span><p class="text-muted mt-1 mb-0">Put it in front of real users and real load. Polish the parts people feel.</p></li>
+      <li><span class="font-mono text-sm text-accent">03 · support</span><p class="text-muted mt-1 mb-0">Stand behind it. Keep measuring, keep improving, or hand it off cleanly.</p></li>
+    </ol>
+
+    <p class="mt-12 font-mono text-sm">
+      <a href="/contact" class="text-accent">Work with us →</a>
+    </p>
+  </section>
+</Layout>
