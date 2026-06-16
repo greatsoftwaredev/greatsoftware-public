@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ProductCard from "../components/ProductCard.astro";
-import { site } from "../config/site";
+import AlpenglowHero from "../components/AlpenglowHero.astro";
 
 const products = [
   {
@@ -30,22 +30,7 @@ const steps = [
 ];
 ---
 <Layout>
-  <!-- Hero (static placeholder; AlpenglowHero replaces this in Task 7) -->
-  <section class="mx-auto max-w-6xl px-6 pt-24 pb-28">
-    <p class="font-mono text-sm text-accent mb-4">An independent software studio</p>
-    <h1 class="text-5xl md:text-7xl tracking-tight max-w-3xl">{site.tagline}</h1>
-    <p class="mt-6 max-w-xl text-lg text-muted">{site.oneLiner}</p>
-    <div class="mt-8 flex gap-4">
-      <a href="#products"
-         class="rounded-lg bg-accent px-5 py-3 font-mono text-sm text-accent-ink no-underline hover:no-underline hover:opacity-90 transition-opacity duration-200">
-        See our work
-      </a>
-      <a href="/about"
-         class="rounded-lg border border-line px-5 py-3 font-mono text-sm text-ink no-underline hover:no-underline hover:border-accent transition-colors duration-200">
-        About the studio
-      </a>
-    </div>
-  </section>
+  <AlpenglowHero />
 
   <!-- Products -->
   <section id="products" class="mx-auto max-w-6xl px-6 py-12 scroll-mt-20">

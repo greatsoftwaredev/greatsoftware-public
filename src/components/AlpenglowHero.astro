@@ -1,0 +1,49 @@
+---
+import { site } from "../config/site";
+---
+<section
+  class="relative mx-auto max-w-6xl px-6 pt-24 pb-28"
+  style="background: linear-gradient(180deg, color-mix(in srgb, var(--color-sky) calc(var(--tod,0.6)*100%), var(--color-paper)) 0%, var(--color-paper) 70%);">
+  <p class="font-mono text-sm text-accent mb-4">An independent software studio</p>
+  <h1 class="text-5xl md:text-7xl tracking-tight max-w-3xl">{site.tagline}</h1>
+  <p class="mt-6 max-w-xl text-lg text-muted">{site.oneLiner}</p>
+
+  <div class="mt-8 flex flex-wrap gap-4">
+    <a href="#products"
+       class="rounded-lg bg-accent px-5 py-3 font-mono text-sm text-accent-ink no-underline hover:no-underline hover:opacity-90 transition-opacity duration-200">
+      See our work
+    </a>
+    <a href="/about"
+       class="rounded-lg border border-line px-5 py-3 font-mono text-sm text-ink no-underline hover:no-underline hover:border-accent transition-colors duration-200">
+      About the studio
+    </a>
+  </div>
+
+  <!-- ArrowJS island: time-of-day / alpenglow control (garnish) -->
+  <div data-alpenglow class="mt-12 flex items-center gap-3 font-mono text-xs text-muted">
+    <label for="tod">alpenglow</label>
+    <input id="tod" type="range" min="0" max="100" value="60"
+           class="accent-[var(--color-accent)] w-40 cursor-pointer" aria-label="Time of day" />
+    <span data-tod-label>golden hour</span>
+  </div>
+</section>
+
+<script>
+  import { reactive, watch } from "@arrow-js/core";
+
+  const root = document.querySelector<HTMLElement>("[data-alpenglow]");
+  const input = root?.querySelector<HTMLInputElement>("#tod");
+  const label = root?.querySelector<HTMLElement>("[data-tod-label]");
+
+  if (root && input && label) {
+    const state = reactive({ t: 60 });
+
+    watch(() => {
+      const t = state.t / 100; // 0 dawn → 1 dusk
+      document.documentElement.style.setProperty("--tod", t.toFixed(3));
+      label.textContent = t < 0.33 ? "dawn" : t < 0.7 ? "golden hour" : "dusk";
+    });
+
+    input.addEventListener("input", () => { state.t = Number(input.value); });
+  }
+</script>
