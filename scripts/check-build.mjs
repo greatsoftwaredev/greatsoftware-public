@@ -1,7 +1,9 @@
 import { readFileSync, existsSync } from "node:fs";
 
 const failures = [];
+let attempted = 0;
 function check(name, cond) {
+  attempted++;
   if (!cond) failures.push(name);
 }
 function html(path) {
@@ -47,7 +49,7 @@ check("contact: tel href", pages.contact.includes("tel:+15555555555"));
 check("no old main.tsx", !existsSync("src/main.tsx"));
 check("no index.html at root src", !existsSync("index.html"));
 
-const total = 21;
+const total = attempted;
 const passed = total - failures.length;
 const summary = {
   timestamp: new Date().toISOString(),
