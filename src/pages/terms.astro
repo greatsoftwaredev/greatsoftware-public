@@ -4,7 +4,7 @@ import LegalPage from "../components/LegalPage.astro";
 import { site } from "../config/site";
 ---
 <Layout title="Terms & Messaging Terms" description="Great Software service terms and SMS messaging terms.">
-  <LegalPage title="Terms & Messaging Terms" updated="June 16, 2026">
+  <LegalPage title="Terms & Messaging Terms" updated={site.legalUpdated}>
     <p>These terms govern your use of {site.domain} and the services {site.name} provides. By engaging our services, you agree to these terms.</p>
 
     <h2>Services</h2>

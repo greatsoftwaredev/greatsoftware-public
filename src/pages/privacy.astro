@@ -4,7 +4,7 @@ import LegalPage from "../components/LegalPage.astro";
 import { site } from "../config/site";
 ---
 <Layout title="Privacy Policy" description="Great Software privacy policy, including SMS/text messaging practices.">
-  <LegalPage title="Privacy Policy" updated="June 16, 2026">
+  <LegalPage title="Privacy Policy" updated={site.legalUpdated}>
     <p>{site.name} ("we", "us") operates {site.domain} and the software products and services described on it. This policy explains what information we collect, how we use it, and the choices you have.</p>
 
     <h2>Information we collect</h2>

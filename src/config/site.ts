@@ -9,6 +9,7 @@ export const site = {
     "An independent software studio — our own products, client work, and research. Whatever the problem needs.",
   domain: "greatsoftware.dev",
   url: "https://greatsoftware.dev",
+  legalUpdated: "June 16, 2026",
   email: RAW_EMAIL,
   phone: RAW_PHONE,
   /** mailto: href derived from email */
