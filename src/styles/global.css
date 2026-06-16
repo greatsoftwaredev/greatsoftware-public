@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #FAF9F6;
+  --color-sky: #EAF1F6;
+  --color-ink: #1A2230;
+  --color-muted: #566173;
+  --color-line: #E3E2DC;
+  --color-ridge-1: #C7D3DE;
+  --color-ridge-2: #9FB2C4;
+  --color-ridge-3: #6B8299;
+  --color-ridge-4: #3E5468;
+  --color-accent: #D9663E;
+  --color-accent-ink: #FFFFFF;
+
+  --font-heading: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    color: var(--color-ink);
+    line-height: 1.1;
+  }
+  a { color: var(--color-accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+}
