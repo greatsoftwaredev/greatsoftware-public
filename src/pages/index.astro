@@ -1,8 +1,72 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import ProductCard from "../components/ProductCard.astro";
+import { site } from "../config/site";
+
+const products = [
+  {
+    title: "Tenet",
+    description: "We build and rent lead-generation websites to local service businesses, and deliver the calls and web leads they generate.",
+    status: "live" as const,
+  },
+  {
+    title: "Changesets for VS Code",
+    description: "Manage changesets directly from VS Code and Cursor. Manual, AI-powered, or empty changesets — one command.",
+    status: "live" as const,
+    link: "https://open-vsx.org/extension/GreatSoftwareLLC/vscode-changesets",
+    linkText: "View on Open VSX →",
+  },
+  {
+    title: "Meld",
+    description: "A couples intimacy app. Two people. One toggle. Zero rejection.",
+    status: "coming-soon" as const,
+  },
+];
+
+const steps = [
+  { k: "build", t: "Build", d: "Products, client work, prototypes, research — whatever the problem actually needs." },
+  { k: "ship", t: "Ship", d: "Real software in production, not slideware. We sweat the parts users feel." },
+  { k: "support", t: "Support", d: "We stand behind what we make and keep improving it." },
+];
 ---
 <Layout>
-  <section class="mx-auto max-w-6xl px-6 py-24">
-    <h1 class="text-5xl">Great Software</h1>
+  <!-- Hero (static placeholder; AlpenglowHero replaces this in Task 7) -->
+  <section class="mx-auto max-w-6xl px-6 pt-24 pb-28">
+    <p class="font-mono text-sm text-accent mb-4">An independent software studio</p>
+    <h1 class="text-5xl md:text-7xl tracking-tight max-w-3xl">{site.tagline}</h1>
+    <p class="mt-6 max-w-xl text-lg text-muted">{site.oneLiner}</p>
+    <div class="mt-8 flex gap-4">
+      <a href="#products"
+         class="rounded-lg bg-accent px-5 py-3 font-mono text-sm text-accent-ink no-underline hover:no-underline hover:opacity-90 transition-opacity duration-200">
+        See our work
+      </a>
+      <a href="/about"
+         class="rounded-lg border border-line px-5 py-3 font-mono text-sm text-ink no-underline hover:no-underline hover:border-accent transition-colors duration-200">
+        About the studio
+      </a>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section id="products" class="mx-auto max-w-6xl px-6 py-12 scroll-mt-20">
+    <h2 class="text-3xl mb-8">Products &amp; ventures</h2>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {products.map((p) => <ProductCard {...p} />)}
+    </div>
+  </section>
+
+  <!-- How we work -->
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <h2 class="text-3xl mb-8">How we work</h2>
+    <div class="grid gap-6 sm:grid-cols-3">
+      {steps.map((s, i) => (
+        <div class="flex flex-col gap-2">
+          <span class="font-mono text-sm text-accent">0{i + 1} · {s.k}</span>
+          <h3 class="text-xl">{s.t}</h3>
+          <p class="text-muted m-0">{s.d}</p>
+        </div>
+      ))}
+    </div>
+    <a href="/about" class="inline-block mt-8 font-mono text-sm text-accent">Read more about the studio →</a>
   </section>
 </Layout>
