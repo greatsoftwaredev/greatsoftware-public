@@ -2,8 +2,9 @@
 import { site } from "../config/site";
 ---
 <section
-  class="relative mx-auto max-w-6xl px-6 pt-24 pb-28"
+  class="relative w-full"
   style="background: linear-gradient(180deg, color-mix(in srgb, var(--color-sky) calc(var(--tod,0.6)*100%), var(--color-paper)) 0%, var(--color-paper) 70%);">
+  <div class="mx-auto max-w-6xl px-6 pt-24 pb-28">
   <p class="font-mono text-sm text-accent mb-4">An independent software studio</p>
   <h1 class="text-5xl md:text-7xl tracking-tight max-w-3xl">{site.tagline}</h1>
   <p class="mt-6 max-w-xl text-lg text-muted">{site.oneLiner}</p>
@@ -25,6 +26,7 @@ import { site } from "../config/site";
     <input id="tod" type="range" min="0" max="100" value="60"
            class="accent-[var(--color-accent)] w-40 cursor-pointer" />
     <span data-tod-label>golden hour</span>
+  </div>
   </div>
 </section>
 
