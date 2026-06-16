@@ -1,4 +1,6 @@
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
+
+const mode = process.argv[2] || "full";
 
 const failures = [];
 let attempted = 0;
@@ -8,6 +10,11 @@ function check(name, cond) {
 }
 function html(path) {
   return existsSync(path) ? readFileSync(path, "utf8") : "";
+}
+
+if (!existsSync("dist")) {
+  console.error("dist/ does not exist — run `npm run build` first");
+  process.exit(1);
 }
 
 const pages = {
@@ -53,17 +60,15 @@ const total = attempted;
 const passed = total - failures.length;
 const summary = {
   timestamp: new Date().toISOString(),
-  mode: "full",
+  mode,
   total,
   passed,
   failed: failures.length,
   skipped: 0,
   failures: failures.map((f) => ({ file: "dist", line: 0, test_name: f, error: "assertion failed" })),
 };
-import("node:fs").then(({ mkdirSync, writeFileSync }) => {
-  mkdirSync("test_logs", { recursive: true });
-  writeFileSync("test_logs/latest_summary.json", JSON.stringify(summary, null, 2));
-});
+mkdirSync("test_logs", { recursive: true });
+writeFileSync("test_logs/latest_summary.json", JSON.stringify(summary, null, 2));
 
 if (failures.length) {
   console.error("FAILED:\n" + failures.map((f) => "  - " + f).join("\n"));

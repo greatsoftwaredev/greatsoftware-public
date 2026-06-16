@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# Static site: --smoke / --fast / full all run the same build + assertions (fast enough).
-echo "Building site..."
+# --smoke / --fast / full all run the full build + assertions (build is fast; no lighter mode needed).
+RAW="${1:-full}"
+MODE="${RAW#--}"
+echo "Building site... (mode: $MODE)"
 npm run build >/dev/null
 echo "Running build assertions..."
-node scripts/check-build.mjs
+node scripts/check-build.mjs "$MODE"
