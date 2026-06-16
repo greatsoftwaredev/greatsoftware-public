@@ -1,0 +1,22 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../config/site";
+---
+<Layout title="Contact" description="Get in touch with Great Software.">
+  <section class="mx-auto max-w-3xl px-6 pt-24 pb-16">
+    <p class="font-mono text-sm text-accent mb-4">Contact</p>
+    <h1 class="text-4xl md:text-5xl tracking-tight">Let's talk.</h1>
+    <p class="mt-6 text-lg text-muted max-w-xl">Have a product idea, a project, or a problem worth solving? Reach out directly — we read everything.</p>
+
+    <dl class="mt-10 flex flex-col gap-6">
+      <div>
+        <dt class="font-mono text-sm text-muted">Email</dt>
+        <dd class="m-0 text-xl"><a href={site.mailHref}>{site.email}</a></dd>
+      </div>
+      <div>
+        <dt class="font-mono text-sm text-muted">Phone</dt>
+        <dd class="m-0 text-xl"><a href={site.phoneHref}>{site.phone}</a></dd>
+      </div>
+    </dl>
+  </section>
+</Layout>
