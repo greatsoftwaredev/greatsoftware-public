@@ -23,7 +23,7 @@ import { site } from "../config/site";
   <div data-alpenglow class="mt-12 flex items-center gap-3 font-mono text-xs text-muted">
     <label for="tod">alpenglow</label>
     <input id="tod" type="range" min="0" max="100" value="60"
-           class="accent-[var(--color-accent)] w-40 cursor-pointer" aria-label="Time of day" />
+           class="accent-[var(--color-accent)] w-40 cursor-pointer" />
     <span data-tod-label>golden hour</span>
   </div>
 </section>
@@ -42,6 +42,7 @@ import { site } from "../config/site";
       const t = state.t / 100; // 0 dawn → 1 dusk
       document.documentElement.style.setProperty("--tod", t.toFixed(3));
       label.textContent = t < 0.33 ? "dawn" : t < 0.7 ? "golden hour" : "dusk";
+      input.setAttribute("aria-valuetext", label.textContent ?? "");
     });
 
     input.addEventListener("input", () => { state.t = Number(input.value); });
