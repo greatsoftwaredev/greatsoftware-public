@@ -25,3 +25,6 @@ dist-ssr
 *.sw?
 
 test_logs/
+
+# Local dev artifacts
+.playwright-mcp/
