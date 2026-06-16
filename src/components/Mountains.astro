@@ -1,0 +1,20 @@
+---
+// Decorative fixed ridgeline band anchored to the bottom of the viewport.
+---
+<div aria-hidden="true"
+     class="pointer-events-none fixed inset-x-0 bottom-0 -z-10 h-[34vh] min-h-[160px] max-md:h-[120px] max-md:min-h-[120px] overflow-hidden">
+  <svg class="absolute bottom-0 w-full h-full" viewBox="0 0 1440 400"
+       preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- far -->
+    <path fill="var(--color-ridge-1)" d="M0 320 L240 210 L470 300 L720 180 L980 290 L1230 200 L1440 280 L1440 400 L0 400 Z"/>
+    <!-- mid-far -->
+    <path fill="var(--color-ridge-2)" d="M0 360 L210 250 L430 330 L690 230 L940 330 L1200 250 L1440 320 L1440 400 L0 400 Z"/>
+    <!-- mid-near -->
+    <path fill="var(--color-ridge-3)" d="M0 390 L260 300 L520 370 L780 290 L1040 370 L1300 300 L1440 360 L1440 400 L0 400 Z"/>
+    <!-- near -->
+    <path fill="var(--color-ridge-4)" d="M0 400 L320 350 L600 395 L880 345 L1160 395 L1440 360 L1440 400 L0 400 Z"/>
+    <!-- alpenglow overlay: opacity driven by the --tod CSS var (set by the ArrowJS island; default subtle) -->
+    <rect x="0" y="0" width="1440" height="400" fill="var(--color-accent)"
+          style="opacity: calc(var(--tod, 0.4) * 0.22); mix-blend-mode: multiply;"/>
+  </svg>
+</div>

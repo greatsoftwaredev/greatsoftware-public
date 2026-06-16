@@ -1,0 +1,23 @@
+---
+import Logo from "./Logo.astro";
+const links = [
+  { href: "/#products", label: "Products" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+---
+<header class="sticky top-0 z-30 backdrop-blur-sm bg-paper/80 border-b border-line">
+  <nav aria-label="Main" class="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
+    <a href="/" class="no-underline hover:no-underline"><Logo /></a>
+    <ul class="flex items-center gap-6 list-none m-0 p-0">
+      {links.map((l) => (
+        <li>
+          <a href={l.href}
+             class="inline-block py-2 font-mono text-sm text-muted hover:text-ink no-underline hover:no-underline transition-colors duration-200">
+            {l.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>

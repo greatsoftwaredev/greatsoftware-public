@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LegalPage from "../components/LegalPage.astro";
+import { site } from "../config/site";
+---
+<Layout title="Privacy Policy" description="Great Software privacy policy, including SMS/text messaging practices.">
+  <LegalPage title="Privacy Policy" updated={site.legalUpdated}>
+    <p>{site.name} ("we", "us") operates {site.domain} and the software products and services described on it. This policy explains what information we collect, how we use it, and the choices you have.</p>
+
+    <h2>Information we collect</h2>
+    <p>We collect information you provide directly — such as your name, email address, phone number, and any details you include when you contact us or engage our services — and basic technical data (such as IP address and browser type) collected automatically when you visit our site.</p>
+
+    <h2>How we use information</h2>
+    <p>We use the information to provide and operate our services, respond to inquiries, deliver the leads and notifications our clients have requested, maintain security, and comply with legal obligations. We do not sell personal information.</p>
+
+    <h2>SMS / Text Messaging</h2>
+    <p>We send SMS notifications to our business clients about leads generated on the websites we operate for them. By providing a mobile number and agreeing to our service terms, a client consents to receive these messages.</p>
+    <ul>
+      <li>We <strong>do not share or sell</strong> mobile numbers or SMS opt-in data to third parties or affiliates for marketing. This information is shared only with our SMS provider (Telnyx) solely to deliver the messages the client has requested.</li>
+      <li>Message frequency varies based on lead activity.</li>
+      <li>Message and data rates may apply.</li>
+      <li>Reply <strong>STOP</strong> to unsubscribe at any time; reply <strong>HELP</strong> for help, or contact us at <a href={site.mailHref}>{site.email}</a> / <a href={site.phoneHref}>{site.phone}</a>.</li>
+    </ul>
+
+    <h2>Data sharing</h2>
+    <p>We share information only with service providers who help us operate (such as hosting and our SMS provider), and only as needed to deliver our services or as required by law.</p>
+
+    <h2>Data retention &amp; security</h2>
+    <p>We retain information for as long as needed to provide our services and meet legal requirements, and we use reasonable safeguards to protect it.</p>
+
+    <h2>Your choices</h2>
+    <p>You may request access to or deletion of your personal information, and you may opt out of SMS at any time by replying STOP. Contact us at <a href={site.mailHref}>{site.email}</a>.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy? Email <a href={site.mailHref}>{site.email}</a> or call <a href={site.phoneHref}>{site.phone}</a>. See also our <a href="/terms">Terms &amp; Messaging Terms</a>.</p>
+  </LegalPage>
+</Layout>
