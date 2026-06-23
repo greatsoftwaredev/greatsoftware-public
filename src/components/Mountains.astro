@@ -58,9 +58,13 @@ const stars = Array.from({ length: 52 }, (_, i) => ({
      style="height: var(--mtn-h);">
   <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 400"
        preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill="var(--color-ridge-1)" d="M0 232 L240 150 L470 214 L720 132 L980 208 L1230 140 L1440 200 L1440 400 L0 400 Z"/>
-    <path fill="var(--color-ridge-2)" d="M0 282 L240 216 L470 282 L720 200 L980 280 L1240 216 L1440 262 L1440 400 L0 400 Z"/>
-    <path fill="var(--color-ridge-3)" d="M0 332 L260 272 L520 332 L780 262 L1040 332 L1300 272 L1440 312 L1440 400 L0 400 Z"/>
-    <path fill="var(--color-ridge-4)" d="M0 382 L320 332 L600 382 L880 332 L1160 382 L1440 346 L1440 400 L0 400 Z"/>
+    <!-- far range: tall, jagged Wasatch peaks with uneven heights + notches -->
+    <path fill="var(--color-ridge-1)" d="M0 206 L70 150 L150 176 L232 86 L300 146 L362 118 L452 190 L520 102 L576 150 L662 72 L724 132 L806 166 L888 100 L966 178 L1052 120 L1140 204 L1222 90 L1302 150 L1382 122 L1440 172 L1440 400 L0 400 Z"/>
+    <!-- mid-far range, offset from the far peaks for depth -->
+    <path fill="var(--color-ridge-2)" d="M0 268 L92 214 L172 250 L252 178 L332 234 L412 198 L502 254 L582 176 L662 230 L742 194 L822 250 L902 184 L986 240 L1072 198 L1162 254 L1242 188 L1322 234 L1402 204 L1440 228 L1440 400 L0 400 Z"/>
+    <!-- mid-near range -->
+    <path fill="var(--color-ridge-3)" d="M0 330 L112 290 L212 320 L302 268 L392 314 L492 284 L592 322 L692 270 L792 318 L882 286 L982 324 L1082 278 L1182 318 L1282 288 L1382 320 L1440 300 L1440 400 L0 400 Z"/>
+    <!-- near foothills: lower and gentler -->
+    <path fill="var(--color-ridge-4)" d="M0 384 L132 350 L262 378 L372 344 L500 380 L622 350 L762 382 L882 346 L1012 380 L1142 352 L1282 380 L1382 356 L1440 372 L1440 400 L0 400 Z"/>
   </svg>
 </div>
