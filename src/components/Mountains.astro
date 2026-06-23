@@ -51,7 +51,7 @@ function ridge(
 ) {
   const noise = makeNoise(seed);
   const hs: number[] = [];
-  let maxH = 0;
+  let maxH = 0, maxIdx = 0;
   for (let p = 0; p < pts; p++) {
     const x = p / (pts - 1);
     let h = 0, amp = 1, freq = baseFreq, sum = 0;
@@ -62,7 +62,7 @@ function ridge(
     }
     h = Math.pow(h / sum, sharpen); // deepen valleys, sharpen crests
     hs.push(h);
-    if (h > maxH) maxH = h;
+    if (h > maxH) { maxH = h; maxIdx = p; }
   }
   const W = 1440;
   let d = "";
@@ -71,16 +71,19 @@ function ridge(
     const yy = (valleyY - (hs[q] / maxH) * (valleyY - peakY)).toFixed(1);
     d += (q === 0 ? "M" : "L") + xx + " " + yy + " ";
   }
-  return d + "L" + W + " 400 L0 400 Z";
+  // peakX: viewport-fraction of the tallest crest (the far range is "backlit" here)
+  return { d: d + "L" + W + " 400 L0 400 Z", peakX: maxIdx / (pts - 1) };
 }
 const ridges = [
   // far range: tall, sharp, most detail
-  { fill: "var(--color-ridge-1)", d: ridge(1207, 200, 48, 216, 6, 2.6, 0.56, 1.7) },
-  { fill: "var(--color-ridge-2)", d: ridge(5519, 180, 146, 286, 6, 3.2, 0.56, 1.5) },
-  { fill: "var(--color-ridge-3)", d: ridge(8831, 160, 238, 336, 5, 4.0, 0.55, 1.34) },
+  { fill: "var(--color-ridge-1)", ...ridge(1207, 200, 48, 216, 6, 2.6, 0.56, 1.7) },
+  { fill: "var(--color-ridge-2)", ...ridge(5519, 180, 146, 286, 6, 3.2, 0.56, 1.5) },
+  { fill: "var(--color-ridge-3)", ...ridge(8831, 160, 238, 336, 5, 4.0, 0.55, 1.34) },
   // near foothills: lower and gentler
-  { fill: "var(--color-ridge-4)", d: ridge(3344, 140, 322, 388, 5, 4.8, 0.54, 1.22) },
+  { fill: "var(--color-ridge-4)", ...ridge(3344, 140, 322, 388, 5, 4.8, 0.54, 1.22) },
 ];
+// Soft backlight glows from behind the tallest crest of the far range.
+const backlitX = (ridges[0].peakX * 100).toFixed(1);
 ---
 <!-- BACKDROP (behind all content) -->
 <div data-backdrop aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10">
@@ -112,6 +115,14 @@ const ridges = [
       ))}
     </svg>
   </div>
+
+  <!-- soft white backlight behind the tallest far peak (mountains silhouette against it) -->
+  <div class="absolute"
+       style={`left:${backlitX}%; bottom:calc(var(--mtn-h) * 0.72); width:62vw; height:42vh;
+               transform:translate(-50%, 50%);
+               background:radial-gradient(ellipse at center,
+                 rgba(255,253,247,0.55) 0%, rgba(255,253,247,0.20) 30%, transparent 66%);
+               filter:blur(28px);`}></div>
 </div>
 
 <!-- FOREGROUND mountain band; content scrolls behind it -->
