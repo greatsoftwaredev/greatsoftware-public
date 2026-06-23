@@ -7,10 +7,13 @@ const { withWordmark = true, class: className = "" } = Astro.props;
 ---
 <span class={`inline-flex items-center gap-2 ${className}`}>
   <svg viewBox="0 0 48 32" width="32" height="22" role="img" aria-label="Great Software"
-       fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linejoin="round" stroke-linecap="round" class="text-ink">
-    <!-- three peaks: left, center (tallest), right -->
-    <path d="M2 30 L12 14 L20 24 L24 6 L30 24 L38 12 L46 30" />
+       fill="currentColor" class="text-ink">
+    <!-- layered rugged ranges (matches the page): far/light → near/solid.
+         each range rises from the bottom-left corner and returns to the
+         bottom-right corner, so nothing is clipped at the edges -->
+    <path opacity="0.34" d="M0 32 L6 16 L12 20 L19 7 L25 14 L31 9 L38 17 L44 12 L48 32 Z"/>
+    <path opacity="0.62" d="M0 32 L8 22 L15 26 L22 17 L29 23 L36 18 L43 24 L48 32 Z"/>
+    <path d="M0 32 L9 27 L17 29 L26 24 L34 29 L42 26 L48 32 Z"/>
   </svg>
   {withWordmark && (
     <span class="font-heading font-semibold text-ink tracking-tight">Great Software</span>
