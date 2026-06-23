@@ -126,6 +126,6 @@ html.night [data-glow-night] { opacity: 1; }
 
 /* Snappier fade for deliberate user actions (toggle / gsGlow); the ambient
    time-of-day + OS drift keep the slow ~30s feel. */
-html[data-fade="fast"] { transition-duration: 1.8s; }
+html[data-fade="fast"] { transition-duration: 1.2s; }
 html[data-fade="fast"] [data-glow-day],
-html[data-fade="fast"] [data-glow-night] { transition-duration: 1.8s; }
+html[data-fade="fast"] [data-glow-night] { transition-duration: 1.2s; }
