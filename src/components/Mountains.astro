@@ -5,10 +5,14 @@
 //   • Day scene  — soft warm-to-cool glow driven by --tod (time of day).
 //   • Night scene — deep sky, a star field, and a moon; shown when <html>.night.
 //
+// A soft white backlight traces the whole skyline: a blurred copy of the
+// topmost ridge outline sits in the sky layer, behind the opaque foreground
+// mountains, so the entire ridge edge reads as rim-lit / back-lit.
+//
 // The <head> controller toggles .night and sets --tod from the visitor's local
 // time (or a localStorage / gsGlow() override). The mountain band colours come
-// from the ridge tokens, which .night darkens, so the same band crossfades
-// between day and night via a fill transition.
+// from the ridge tokens, which .night darkens, so the band crossfades between
+// day and night via a fill transition.
 
 // Deterministic star field (no RNG, so builds stay reproducible). Kept in the
 // upper sky (y < 520) so stars sit above the mountain band.
@@ -45,13 +49,13 @@ function makeNoise(seed: number) {
     return a + smooth(f) * (b - a);
   };
 }
-function ridge(
+function ridgeYs(
   seed: number, pts: number, peakY: number, valleyY: number,
   octaves: number, baseFreq: number, persistence: number, sharpen: number,
 ) {
   const noise = makeNoise(seed);
   const hs: number[] = [];
-  let maxH = 0, maxIdx = 0;
+  let maxH = 0;
   for (let p = 0; p < pts; p++) {
     const x = p / (pts - 1);
     let h = 0, amp = 1, freq = baseFreq, sum = 0;
@@ -62,28 +66,31 @@ function ridge(
     }
     h = Math.pow(h / sum, sharpen); // deepen valleys, sharpen crests
     hs.push(h);
-    if (h > maxH) { maxH = h; maxIdx = p; }
+    if (h > maxH) maxH = h;
   }
-  const W = 1440;
+  return hs.map((h) => valleyY - (h / maxH) * (valleyY - peakY));
+}
+function buildPath(ys: number[]) {
+  const W = 1440, pts = ys.length;
   let d = "";
   for (let q = 0; q < pts; q++) {
     const xx = ((q / (pts - 1)) * W).toFixed(1);
-    const yy = (valleyY - (hs[q] / maxH) * (valleyY - peakY)).toFixed(1);
-    d += (q === 0 ? "M" : "L") + xx + " " + yy + " ";
+    d += (q === 0 ? "M" : "L") + xx + " " + ys[q].toFixed(1) + " ";
   }
-  // peakX: viewport-fraction of the tallest crest (the far range is "backlit" here)
-  return { d: d + "L" + W + " 400 L0 400 Z", peakX: maxIdx / (pts - 1) };
+  return d + "L" + W + " 400 L0 400 Z";
 }
-const ridges = [
-  // far range: tall, sharp, most detail
-  { fill: "var(--color-ridge-1)", ...ridge(1207, 200, 48, 216, 6, 2.6, 0.56, 1.7) },
-  { fill: "var(--color-ridge-2)", ...ridge(5519, 180, 146, 286, 6, 3.2, 0.56, 1.5) },
-  { fill: "var(--color-ridge-3)", ...ridge(8831, 160, 238, 336, 5, 4.0, 0.55, 1.34) },
-  // near foothills: lower and gentler
-  { fill: "var(--color-ridge-4)", ...ridge(3344, 140, 322, 388, 5, 4.8, 0.54, 1.22) },
+
+const PTS = 200; // shared x-grid so the ranges combine into one skyline
+const layers = [
+  // far range: tall, sharp, most detail → near foothills: lower and gentler
+  { fill: "var(--color-ridge-1)", ys: ridgeYs(1207, PTS, 48, 216, 6, 2.6, 0.56, 1.7) },
+  { fill: "var(--color-ridge-2)", ys: ridgeYs(5519, PTS, 146, 286, 6, 3.2, 0.56, 1.5) },
+  { fill: "var(--color-ridge-3)", ys: ridgeYs(8831, PTS, 238, 336, 5, 4.0, 0.55, 1.34) },
+  { fill: "var(--color-ridge-4)", ys: ridgeYs(3344, PTS, 322, 388, 5, 4.8, 0.54, 1.22) },
 ];
-// Soft backlight glows from behind the tallest crest of the far range.
-const backlitX = (ridges[0].peakX * 100).toFixed(1);
+const ridges = layers.map((l) => ({ fill: l.fill, d: buildPath(l.ys) }));
+// skyline = topmost outline across all ranges (the edge that gets back-lit)
+const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) => l.ys[i]))));
 ---
 <!-- BACKDROP (behind all content) -->
 <div data-backdrop aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10">
@@ -116,13 +123,24 @@ const backlitX = (ridges[0].peakX * 100).toFixed(1);
     </svg>
   </div>
 
-  <!-- soft white backlight behind the tallest far peak (mountains silhouette against it) -->
-  <div class="absolute"
-       style={`left:${backlitX}%; bottom:calc(var(--mtn-h) * 0.72); width:62vw; height:42vh;
-               transform:translate(-50%, 50%);
-               background:radial-gradient(ellipse at center,
-                 rgba(255,253,247,0.55) 0%, rgba(255,253,247,0.20) 30%, transparent 66%);
-               filter:blur(28px);`}></div>
+  <!-- backlight: blurred skyline outline, glows up along the whole ridge edge -->
+  <svg class="absolute inset-x-0 bottom-0 w-full" style="height: var(--mtn-h); overflow: visible;"
+       viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="skyHaloWide" x="-20%" y="-220%" width="140%" height="440%">
+        <feGaussianBlur stdDeviation="22 64"/>
+      </filter>
+      <filter id="skyHalo" x="-14%" y="-130%" width="128%" height="300%">
+        <feGaussianBlur stdDeviation="10 30"/>
+      </filter>
+      <filter id="skyRim" x="-10%" y="-60%" width="120%" height="200%">
+        <feGaussianBlur stdDeviation="2.5 8"/>
+      </filter>
+    </defs>
+    <path d={skyline} fill="rgba(255,253,247,0.36)" filter="url(#skyHaloWide)"/>
+    <path d={skyline} fill="rgba(255,253,247,0.40)" filter="url(#skyHalo)"/>
+    <path d={skyline} fill="rgba(255,254,250,0.82)" filter="url(#skyRim)"/>
+  </svg>
 </div>
 
 <!-- FOREGROUND mountain band; content scrolls behind it -->
