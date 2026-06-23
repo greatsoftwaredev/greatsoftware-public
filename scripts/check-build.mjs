@@ -35,7 +35,8 @@ check("home: tagline", pages.home.includes("A whole range of software"));
 check("home: Tenet", pages.home.includes("Tenet"));
 check("home: Changesets", pages.home.includes("Changesets for VS Code"));
 check("home: Meld", pages.home.includes("Meld"));
-check("home: alpenglow island", pages.home.includes("data-alpenglow"));
+check("home: time-of-day backdrop", pages.home.includes("data-backdrop"));
+check("home: auto time-of-day", pages.home.includes("--tod"));
 
 // 10DLC compliance — Privacy
 check("privacy: no-share clause", pages.privacy.includes("do not share or sell"));
