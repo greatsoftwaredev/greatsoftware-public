@@ -38,6 +38,7 @@ check("home: Meld", pages.home.includes("Meld"));
 check("home: time-of-day backdrop", pages.home.includes("data-backdrop"));
 check("home: auto time-of-day", pages.home.includes("--tod"));
 check("home: night scene", pages.home.includes("data-glow-night"));
+check("home: theme toggle", pages.home.includes("data-theme-toggle"));
 
 // 10DLC compliance — Privacy
 check("privacy: no-share clause", pages.privacy.includes("do not share or sell"));
