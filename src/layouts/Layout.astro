@@ -35,15 +35,64 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
-    <!-- Set the alpenglow intensity from the visitor's local time of day, before paint. -->
+    <!--
+      Alpenglow controller (runs before paint).
+      Default: glow follows the visitor's local time of day.
+      Override via localStorage key "gs-glow":
+        - "cycle"                  → loop through night → dawn → day → dusk
+        - "dawn"|"day"|"dusk"|"night" → lock to that preset
+        - a number 0..1            → lock to a custom intensity
+        - unset / "auto"           → local time (default)
+      Cycle speed: localStorage "gs-glow-interval" (ms, default 3500).
+      Console helper: gsGlow("cycle" | "dusk" | 0.7 | "auto").
+    -->
     <script is:inline>
       (function () {
-        var h = new Date().getHours();
-        var t = h >= 5 && h < 9 ? 0.8      // sunrise — warm glow building
-              : h >= 9 && h < 16 ? 0.3     // midday — bright, cool
-              : h >= 16 && h < 20 ? 0.9    // golden hour / dusk — peak alpenglow
-              : 0.15;                      // night — cool, dim
-        document.documentElement.style.setProperty("--tod", String(t));
+        var KEY = "gs-glow", INT_KEY = "gs-glow-interval";
+        var root = document.documentElement;
+        var PRESETS = { dawn: 0.8, day: 0.3, dusk: 0.9, night: 0.15 };
+        var CYCLE = ["night", "dawn", "day", "dusk"];
+        var timer = null;
+
+        function ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+        function set(v) { root.style.setProperty("--tod", String(v)); }
+        function fromClock() {
+          var h = new Date().getHours();
+          return h >= 5 && h < 9 ? PRESETS.dawn
+               : h >= 9 && h < 16 ? PRESETS.day
+               : h >= 16 && h < 20 ? PRESETS.dusk
+               : PRESETS.night;
+        }
+
+        function apply() {
+          if (timer) { clearInterval(timer); timer = null; }
+          var pref = ls(KEY);
+          var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (pref === "cycle" && !reduce) {
+            var i = 0, ms = parseInt(ls(INT_KEY), 10) || 3500;
+            set(PRESETS[CYCLE[0]]);
+            timer = setInterval(function () {
+              i = (i + 1) % CYCLE.length;
+              set(PRESETS[CYCLE[i]]);
+            }, ms);
+          } else if (pref && PRESETS[pref] != null) {
+            set(PRESETS[pref]);
+          } else if (pref && !isNaN(parseFloat(pref))) {
+            set(Math.max(0, Math.min(1, parseFloat(pref))));
+          } else {
+            set(fromClock());
+          }
+        }
+
+        // Apply immediately + persist, no reload needed.
+        window.gsGlow = function (v) {
+          try {
+            (v == null || v === "auto") ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, String(v));
+          } catch (e) {}
+          apply();
+        };
+
+        apply();
       })();
     </script>
   </head>
