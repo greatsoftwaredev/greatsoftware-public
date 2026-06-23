@@ -43,7 +43,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
         - "dawn"|"day"|"dusk"|"night" → lock to that preset
         - a number 0..1            → lock to a custom intensity
         - unset / "auto"           → local time (default)
-      Cycle speed: localStorage "gs-glow-interval" (ms, default 3500).
+      Cycle speed: localStorage "gs-glow-interval" (ms, default 30000).
       Console helper: gsGlow("cycle" | "dusk" | 0.7 | "auto").
     -->
     <script is:inline>
@@ -77,7 +77,7 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
           var pref = ls(KEY);
           var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
           if (pref === "cycle" && !reduce) {
-            var i = 0, ms = parseInt(ls(INT_KEY), 10) || 3500;
+            var i = 0, ms = parseInt(ls(INT_KEY), 10) || 30000;
             applyState(PRESETS[CYCLE[0]]);
             timer = setInterval(function () {
               i = (i + 1) % CYCLE.length;

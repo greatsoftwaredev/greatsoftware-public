@@ -27,6 +27,22 @@
   initial-value: 0.6;
 }
 
+/* Register the theme colours as typed <color> so the whole palette can
+   interpolate when the scene flips (day <-> night) — driven by a slow
+   transition on <html>. This fades the theme without putting a transition on
+   every element (which would also slow down hover colour changes). */
+@property --color-paper      { syntax: "<color>"; inherits: true; initial-value: #FAF9F6; }
+@property --color-sky        { syntax: "<color>"; inherits: true; initial-value: #EAF1F6; }
+@property --color-ink        { syntax: "<color>"; inherits: true; initial-value: #1A2230; }
+@property --color-muted      { syntax: "<color>"; inherits: true; initial-value: #566173; }
+@property --color-line       { syntax: "<color>"; inherits: true; initial-value: #E3E2DC; }
+@property --color-ridge-1    { syntax: "<color>"; inherits: true; initial-value: #C7D3DE; }
+@property --color-ridge-2    { syntax: "<color>"; inherits: true; initial-value: #9FB2C4; }
+@property --color-ridge-3    { syntax: "<color>"; inherits: true; initial-value: #6B8299; }
+@property --color-ridge-4    { syntax: "<color>"; inherits: true; initial-value: #3E5468; }
+@property --color-accent     { syntax: "<color>"; inherits: true; initial-value: #C04F2B; }
+@property --color-accent-ink { syntax: "<color>"; inherits: true; initial-value: #FFFFFF; }
+
 @layer base {
   html {
     --tod: 0.6;
@@ -34,8 +50,16 @@
        (plus a little) bottom padding so content can scroll clear above the peaks */
     --mtn-h: clamp(200px, 34vh, 360px);
     scroll-behavior: smooth;
-    /* fade the glow when --tod changes (time-of-day, locked, or cycling) */
-    transition: --tod 1.2s ease;
+    /* Slow, ambient fade for the glow (--tod) and the full palette, so the
+       day <-> night change drifts over ~30s rather than snapping. */
+    transition:
+      --tod 30s ease-in-out,
+      --color-paper 30s ease-in-out, --color-sky 30s ease-in-out,
+      --color-ink 30s ease-in-out, --color-muted 30s ease-in-out,
+      --color-line 30s ease-in-out,
+      --color-ridge-1 30s ease-in-out, --color-ridge-2 30s ease-in-out,
+      --color-ridge-3 30s ease-in-out, --color-ridge-4 30s ease-in-out,
+      --color-accent 30s ease-in-out, --color-accent-ink 30s ease-in-out;
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -78,22 +102,17 @@ html.night {
   --color-ridge-2: #26303F;
   --color-ridge-3: #1D2532;
   --color-ridge-4: #141A26;
+  /* Lighter, warmer accent so terracotta labels/links stay legible on dark; the
+     on-accent text goes dark so the CTA button (light accent bg) stays AA too. */
+  --color-accent: #E8895E;
+  --color-accent-ink: #2A1812;
 }
 
-/* Crossfade the two backdrop scenes. */
-[data-glow-day], [data-glow-night] { transition: opacity 0.8s ease; }
+/* Crossfade the two backdrop scenes (slow, to match the palette fade). */
+[data-glow-day], [data-glow-night] { transition: opacity 30s ease-in-out; }
 [data-glow-night] { opacity: 0; }
 html.night [data-glow-day] { opacity: 0; }
 html.night [data-glow-night] { opacity: 1; }
-
-/* Fade palette + mountain colours when the scene flips (solid colours only —
-   gradients crossfade via the opacity rule above). Utility-driven hovers keep
-   their own faster transitions thanks to higher class specificity. */
-body, header, footer, article, h1, h2, h3, h4, p, a, dt, dd, span,
-[data-mtn] path {
-  transition: background-color 0.7s ease, color 0.7s ease,
-              border-color 0.7s ease, fill 0.7s ease;
-}
 
 /* Star twinkle (neutralised under prefers-reduced-motion by the global rule). */
 .twinkle { animation: twinkle 3.2s ease-in-out infinite; }
