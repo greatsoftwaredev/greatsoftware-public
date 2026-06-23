@@ -47,10 +47,10 @@ check("privacy: Telnyx", pages.privacy.includes("Telnyx"));
 check("terms: SMS Program", pages.terms.includes("SMS Program"));
 check("terms: opt-out clause", pages.terms.includes("do not sell or share opt-in data"));
 
-// contact config flows through (stub phone + email)
-check("privacy: contact phone", pages.privacy.includes("(555) 555-5555"));
+// contact config flows through (phone + email)
+check("privacy: contact phone", pages.privacy.includes("(801) 877-0447"));
 check("contact: email", pages.contact.includes("hello@greatsoftware.dev"));
-check("contact: tel href", pages.contact.includes("tel:+15555555555"));
+check("contact: tel href", pages.contact.includes("tel:+18018770447"));
 
 // no leftover React SPA artifacts
 check("no old main.tsx", !existsSync("src/main.tsx"));

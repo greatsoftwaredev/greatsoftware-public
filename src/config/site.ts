@@ -1,4 +1,4 @@
-const RAW_PHONE = import.meta.env.PUBLIC_GS_PHONE ?? "(555) 555-5555";
+const RAW_PHONE = import.meta.env.PUBLIC_GS_PHONE ?? "(801) 877-0447";
 const RAW_EMAIL = import.meta.env.PUBLIC_GS_EMAIL ?? "hello@greatsoftware.dev";
 
 /** Single source of truth for all contact + brand info. */
@@ -6,7 +6,7 @@ export const site = {
   name: "Great Software",
   tagline: "A whole range of software.",
   oneLiner:
-    "An independent software studio — our own products, client work, and research. Whatever the problem needs.",
+    "I build and run my own products, take on client work, and consult on agentic systems that hold up in production.",
   domain: "greatsoftware.dev",
   url: "https://greatsoftware.dev",
   legalUpdated: "June 16, 2026",
