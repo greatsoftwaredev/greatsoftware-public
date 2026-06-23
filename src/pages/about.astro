@@ -2,17 +2,29 @@
 import Layout from "../layouts/Layout.astro";
 import { site } from "../config/site";
 ---
-<Layout title="About" description="How Great Software works — an independent software studio across products, client work, and research.">
+<Layout title="About" description="How Great Software works — an independent software studio across products, client work, and agentic systems consulting.">
   <section class="mx-auto max-w-3xl px-6 pt-24 pb-16">
     <p class="font-mono text-sm text-accent mb-4">About the studio</p>
     <h1 class="text-4xl md:text-5xl tracking-tight">A whole range of software.</h1>
     <div class="mt-8 flex flex-col gap-5 text-lg text-muted">
-      <p>{site.name} is an independent software studio. We take on a deliberately broad range of work — our own products, client and consulting builds, and research — and hold all of it to one standard: software that actually works in the real world.</p>
-      <p>Some of what we build, we run ourselves: live lead-generation systems, developer tooling, products with real users. Some we design and hand off. Some never ships at all — it's research that sharpens the next thing we build.</p>
+      <p>{site.name} is an independent software studio. I founded it on a simple idea: instead of betting everything on one product, take on a broad range of work and hold all of it to one standard, software that actually works in the real world.</p>
+      <p>I do three kinds of work. I build and run my own products. I take on client and consulting builds, including agentic systems and orchestration. And I do research, some of which never ships but makes the next thing better.</p>
       <p>The common thread isn't a single product or a single market. It's range, and the craft to do each kind of work well.</p>
     </div>
 
-    <h2 class="text-2xl mt-16 mb-6">How we work</h2>
+    <h2 class="text-2xl mt-16 mb-6">What I do</h2>
+    <ul class="flex flex-col gap-6 list-none m-0 p-0">
+      <li>
+        <span class="font-mono text-sm text-accent">agentic systems &amp; orchestration</span>
+        <div class="text-muted mt-1">I design, build, and tune AI agents and the workflows that coordinate them so they hold up in production rather than just demo well. I run my own multi-agent platform operating real businesses, so this is daily practice, not theory.</div>
+      </li>
+      <li>
+        <span class="font-mono text-sm text-accent">product &amp; client builds</span>
+        <div class="text-muted mt-1">From first prototype to shipped software. Some of what I build I run myself, some I design and hand off cleanly.</div>
+      </li>
+    </ul>
+
+    <h2 class="text-2xl mt-16 mb-6">How I work</h2>
     <ol class="flex flex-col gap-6 list-none m-0 p-0">
       <li><span class="font-mono text-sm text-accent">01 · build</span><div class="text-muted mt-1">Start from the actual problem. Pick the smallest thing that proves the idea, then make it real.</div></li>
       <li><span class="font-mono text-sm text-accent">02 · ship</span><div class="text-muted mt-1">Put it in front of real users and real load. Polish the parts people feel.</div></li>
@@ -20,7 +32,7 @@ import { site } from "../config/site";
     </ol>
 
     <p class="mt-12 font-mono text-sm">
-      <a href="/contact" class="text-accent">Work with us →</a>
+      <a href="/contact" class="text-accent">Work with me →</a>
     </p>
   </section>
 </Layout>

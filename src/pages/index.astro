@@ -3,34 +3,65 @@ import Layout from "../layouts/Layout.astro";
 import ProductCard from "../components/ProductCard.astro";
 import AlpenglowHero from "../components/AlpenglowHero.astro";
 
+const services = [
+  {
+    k: "agents",
+    t: "Agentic systems & orchestration",
+    d: "I design, build, and tune AI agents and the workflows that coordinate them, with one goal: systems reliable enough to run in production, not just demo well. I run my own multi-agent platform operating real businesses, so this is daily practice, not theory.",
+    cta: "Talk through a project",
+  },
+  {
+    k: "builds",
+    t: "Product & client builds",
+    d: "From first prototype to shipped software. I start from the real problem, build the smallest version that proves the idea, and put it in front of real users and real load.",
+    cta: "Start a build",
+  },
+];
+
 const products = [
   {
     title: "Tenet",
-    description: "We build and rent lead-generation websites to local service businesses, and deliver the calls and web leads they generate.",
+    description: "I build and rent lead-generation websites to local service businesses, and deliver the calls and web leads they generate.",
     status: "live" as const,
   },
   {
     title: "Changesets for VS Code",
-    description: "Manage changesets directly from VS Code and Cursor. Manual, AI-powered, or empty changesets — one command.",
+    description: "Manage changesets directly from VS Code and Cursor. Manual, AI-powered, or empty changesets in one command.",
     status: "live" as const,
     link: "https://open-vsx.org/extension/GreatSoftwareLLC/vscode-changesets",
     linkText: "View on Open VSX →",
   },
   {
     title: "Meld",
-    description: "A couples intimacy app. Two people. One toggle. Zero rejection.",
+    description: "A couples app focused on closeness without the awkwardness. Two people. One toggle. Zero rejection.",
     status: "coming-soon" as const,
   },
 ];
 
 const steps = [
-  { k: "build", t: "Build", d: "Products, client work, prototypes, research — whatever the problem actually needs." },
-  { k: "ship", t: "Ship", d: "Real software in production, not slideware. We sweat the parts users feel." },
-  { k: "support", t: "Support", d: "We stand behind what we make and keep improving it." },
+  { k: "build", t: "Build", d: "Start from the actual problem and make the smallest thing that proves the idea is real." },
+  { k: "ship", t: "Ship", d: "Put it in front of real users and real load, and sweat the parts people actually feel." },
+  { k: "support", t: "Support", d: "Stand behind it, keep improving it, or hand it off cleanly." },
 ];
 ---
 <Layout>
   <AlpenglowHero />
+
+  <!-- Services -->
+  <section id="services" class="mx-auto max-w-6xl px-6 py-12 scroll-mt-20">
+    <h2 class="text-3xl mb-3">What I do</h2>
+    <p class="text-muted max-w-2xl mb-8">An independent studio with a deliberately wide range. The common thread isn't one product or one market, it's range, and doing each kind of work well.</p>
+    <div class="grid gap-6 md:grid-cols-2">
+      {services.map((s) => (
+        <article class="group rounded-xl border border-line bg-paper p-6 transition-colors duration-200 hover:border-accent flex flex-col gap-3">
+          <span class="font-mono text-sm text-accent">{s.k}</span>
+          <h3 class="text-xl m-0">{s.t}</h3>
+          <p class="text-muted m-0">{s.d}</p>
+          <a href="/contact" class="font-mono text-sm text-accent mt-auto pt-2 no-underline group-hover:underline">{s.cta} →</a>
+        </article>
+      ))}
+    </div>
+  </section>
 
   <!-- Products -->
   <section id="products" class="mx-auto max-w-6xl px-6 py-12 scroll-mt-20">
@@ -40,9 +71,9 @@ const steps = [
     </div>
   </section>
 
-  <!-- How we work -->
+  <!-- How I work -->
   <section class="mx-auto max-w-6xl px-6 py-16">
-    <h2 class="text-3xl mb-8">How we work</h2>
+    <h2 class="text-3xl mb-8">How I work</h2>
     <div class="grid gap-6 sm:grid-cols-3">
       {steps.map((s, i) => (
         <div class="flex flex-col gap-2">
