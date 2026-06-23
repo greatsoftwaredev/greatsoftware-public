@@ -127,19 +127,19 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
   <svg class="absolute inset-x-0 bottom-0 w-full" style="height: var(--mtn-h); overflow: visible;"
        viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <filter id="skyHaloWide" x="-20%" y="-220%" width="140%" height="440%">
-        <feGaussianBlur stdDeviation="22 64"/>
+      <filter id="skyHaloWide" x="-25%" y="-320%" width="150%" height="600%">
+        <feGaussianBlur stdDeviation="34 96"/>
       </filter>
-      <filter id="skyHalo" x="-14%" y="-130%" width="128%" height="300%">
-        <feGaussianBlur stdDeviation="10 30"/>
+      <filter id="skyHalo" x="-18%" y="-180%" width="136%" height="380%">
+        <feGaussianBlur stdDeviation="18 50"/>
       </filter>
-      <filter id="skyRim" x="-10%" y="-60%" width="120%" height="200%">
-        <feGaussianBlur stdDeviation="2.5 8"/>
+      <filter id="skyRim" x="-12%" y="-90%" width="124%" height="240%">
+        <feGaussianBlur stdDeviation="6 16"/>
       </filter>
     </defs>
-    <path d={skyline} fill="rgba(255,253,247,0.36)" filter="url(#skyHaloWide)"/>
-    <path d={skyline} fill="rgba(255,253,247,0.40)" filter="url(#skyHalo)"/>
-    <path d={skyline} fill="rgba(255,254,250,0.82)" filter="url(#skyRim)"/>
+    <path d={skyline} fill="rgba(255,253,247,0.20)" filter="url(#skyHaloWide)"/>
+    <path d={skyline} fill="rgba(255,253,247,0.22)" filter="url(#skyHalo)"/>
+    <path d={skyline} fill="rgba(255,254,250,0.42)" filter="url(#skyRim)"/>
   </svg>
 </div>
 
