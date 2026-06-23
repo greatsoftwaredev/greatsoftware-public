@@ -117,3 +117,15 @@ html.night [data-glow-night] { opacity: 1; }
 /* Star twinkle (neutralised under prefers-reduced-motion by the global rule). */
 .twinkle { animation: twinkle 3.2s ease-in-out infinite; }
 @keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.95; } }
+
+/* Nav theme toggle: show only the icon for the current mode. */
+[data-theme-toggle] svg { display: none; }
+[data-theme-toggle][data-mode="auto"] svg[data-icon="auto"],
+[data-theme-toggle][data-mode="light"] svg[data-icon="light"],
+[data-theme-toggle][data-mode="dark"] svg[data-icon="dark"] { display: block; }
+
+/* Snappier fade for deliberate user actions (toggle / gsGlow); the ambient
+   time-of-day + OS drift keep the slow ~30s feel. */
+html[data-fade="fast"] { transition-duration: 1.8s; }
+html[data-fade="fast"] [data-glow-day],
+html[data-fade="fast"] [data-glow-night] { transition-duration: 1.8s; }

@@ -36,20 +36,27 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
     <!--
-      Alpenglow controller (runs before paint).
-      Default: glow follows the visitor's local time of day.
-      Override via localStorage key "gs-glow":
-        - "cycle"                  → loop through night → dawn → day → dusk
-        - "dawn"|"day"|"dusk"|"night" → lock to that preset
-        - a number 0..1            → lock to a custom intensity
-        - unset / "auto"           → local time (default)
-      Cycle speed: localStorage "gs-glow-interval" (ms, default 30000).
-      Console helper: gsGlow("cycle" | "dusk" | 0.7 | "auto").
+      Theme + alpenglow controller (runs before paint).
+      Resolution order:
+        1. localStorage "gs-glow" override (set by the nav toggle or gsGlow()):
+             "light"  -> day scene, glow follows the hour
+             "dark"   -> night scene
+             "dawn"|"day"|"dusk"|"night" -> lock to that preset
+             "cycle"  -> loop night -> dawn -> day -> dusk
+             number 0..1 -> lock to a custom glow intensity
+             unset / "auto" -> step 2
+        2. OS preference (prefers-color-scheme): dark -> night; light -> day with
+           the hour's glow.
+        3. No OS preference -> our local-time clock (day glows + night at night).
+      Toggle cycles auto -> light -> dark. Cycle speed: "gs-glow-interval" (ms,
+      default 30000). User actions fade quickly; ambient drift uses the slow ~30s.
     -->
     <script is:inline>
       (function () {
         var KEY = "gs-glow", INT_KEY = "gs-glow-interval";
         var root = document.documentElement;
+        var mqDark = matchMedia("(prefers-color-scheme: dark)");
+        var mqLight = matchMedia("(prefers-color-scheme: light)");
         var PRESETS = {
           dawn:  { tod: 0.8,  night: false },
           day:   { tod: 0.3,  night: false },
@@ -57,50 +64,101 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
           night: { tod: 0.15, night: true  }
         };
         var CYCLE = ["night", "dawn", "day", "dusk"];
-        var timer = null;
+        var timer = null, fadeTimer = null;
 
         function ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-        function applyState(s) {
+        function setLS(v) { try { (v == null) ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, v); } catch (e) {} }
+
+        function applyState(s, fast) {
+          if (fast) {
+            root.setAttribute("data-fade", "fast");
+            clearTimeout(fadeTimer);
+            fadeTimer = setTimeout(function () { root.removeAttribute("data-fade"); }, 2200);
+          }
           root.style.setProperty("--tod", String(s.tod));
           root.classList.toggle("night", !!s.night);
-        }
-        function clockName() {
-          var h = new Date().getHours();
-          return h >= 5 && h < 9 ? "dawn"
-               : h >= 9 && h < 16 ? "day"
-               : h >= 16 && h < 20 ? "dusk"
-               : "night";
+          updateToggle();
         }
 
-        function apply() {
+        function dayGlow() {            // light mode: glow follows the hour, never night
+          var h = new Date().getHours();
+          if (h >= 5 && h < 9)  return { tod: 0.8, night: false };
+          if (h >= 9 && h < 16) return { tod: 0.3, night: false };
+          if (h >= 16 && h < 20) return { tod: 0.9, night: false };
+          return { tod: 0.2, night: false };
+        }
+        function clockState() {         // full auto: includes the night scene
+          var h = new Date().getHours();
+          if (h >= 5 && h < 9)  return PRESETS.dawn;
+          if (h >= 9 && h < 16) return PRESETS.day;
+          if (h >= 16 && h < 20) return PRESETS.dusk;
+          return PRESETS.night;
+        }
+        function osState() {
+          if (mqDark.matches)  return PRESETS.night;   // OS dark  -> night
+          if (mqLight.matches) return dayGlow();        // OS light -> day, glow by hour
+          return clockState();                          // no preference -> our clock
+        }
+        function resolve(pref) {
+          if (pref === "dark")  return PRESETS.night;
+          if (pref === "light") return dayGlow();
+          if (pref && PRESETS[pref]) return PRESETS[pref];
+          if (pref && !isNaN(parseFloat(pref))) return { tod: Math.max(0, Math.min(1, parseFloat(pref))), night: false };
+          return osState();                             // auto / unset
+        }
+
+        function apply(fast) {
           if (timer) { clearInterval(timer); timer = null; }
           var pref = ls(KEY);
           var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
           if (pref === "cycle" && !reduce) {
             var i = 0, ms = parseInt(ls(INT_KEY), 10) || 30000;
-            applyState(PRESETS[CYCLE[0]]);
-            timer = setInterval(function () {
-              i = (i + 1) % CYCLE.length;
-              applyState(PRESETS[CYCLE[i]]);
-            }, ms);
-          } else if (pref && PRESETS[pref]) {
-            applyState(PRESETS[pref]);
-          } else if (pref && !isNaN(parseFloat(pref))) {
-            applyState({ tod: Math.max(0, Math.min(1, parseFloat(pref))), night: false });
+            applyState(PRESETS[CYCLE[0]], fast);
+            timer = setInterval(function () { i = (i + 1) % CYCLE.length; applyState(PRESETS[CYCLE[i]]); }, ms);
           } else {
-            applyState(PRESETS[clockName()]);
+            applyState(resolve(pref), fast);
           }
         }
 
-        // Apply immediately + persist, no reload needed.
-        window.gsGlow = function (v) {
-          try {
-            (v == null || v === "auto") ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, String(v));
-          } catch (e) {}
-          apply();
-        };
+        // ---- nav theme toggle (auto -> light -> dark) ----
+        function currentMode() {
+          var p = ls(KEY);
+          if (p === "light") return "light";
+          if (p === "dark" || p === "night") return "dark";
+          if (!p || p === "auto") return "auto";
+          return "light";                               // dawn/day/dusk/number/cycle -> light-ish
+        }
+        function updateToggle() {
+          var btn = document.querySelector("[data-theme-toggle]");
+          if (!btn) return;
+          var m = currentMode();
+          btn.setAttribute("data-mode", m);
+          var label = m === "auto" ? "Theme: auto (match system)" : m === "light" ? "Theme: light" : "Theme: dark";
+          btn.setAttribute("aria-label", label);
+          btn.setAttribute("title", label);
+        }
+        function cycleMode() {
+          var order = ["auto", "light", "dark"];
+          setLS((function (n) { return n === "auto" ? null : n; })(order[(order.indexOf(currentMode()) + 1) % order.length]));
+          apply(true);                                  // user action -> snappy fade
+        }
+        function wire() {
+          var btn = document.querySelector("[data-theme-toggle]");
+          if (btn && !btn.hasAttribute("data-wired")) { btn.setAttribute("data-wired", "1"); btn.addEventListener("click", cycleMode); }
+          updateToggle();
+        }
 
-        apply();
+        // programmatic control (snappy)
+        window.gsGlow = function (v) { setLS((v == null || v === "auto") ? null : String(v)); apply(true); };
+        window.gsTheme = { cycle: cycleMode, wire: wire };
+
+        // follow OS scheme changes while in auto (ambient / slow)
+        function onOS() { if (currentMode() === "auto") apply(); }
+        if (mqDark.addEventListener) { mqDark.addEventListener("change", onOS); mqLight.addEventListener("change", onOS); }
+
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire); else wire();
+
+        apply();   // initial (no transition before first paint)
       })();
     </script>
   </head>
