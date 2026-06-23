@@ -1,29 +1,32 @@
 ---
-// Fixed full-viewport atmospheric backdrop: a time-of-day sky plus layered
-// mountain ranges drawn with atmospheric perspective — hazy, light far peaks
-// high on the page and solid, darker ranges low (mostly behind the footer).
-// Warmth/alpenglow is driven by the --tod CSS variable, which an inline script
-// in the document <head> sets from the visitor's local time (CSS default is the
-// fallback when JS is off).
+// Two fixed layers that frame the page:
+//   1. A single soft atmospheric gradient covering the whole viewport. It glows
+//      warm near the horizon (strength from --tod / the visitor's local time)
+//      and fades smoothly up to a cool daylight sky — one continuous blend, no
+//      hard seam anywhere.
+//   2. A foreground mountain band pinned to the bottom of the viewport. Page
+//      content scrolls UP behind it; the body reserves --mtn-h of bottom padding
+//      so the final content clears above the peaks at the end of the scroll.
 ---
+<!-- 1. full-page glow, behind all content -->
 <div data-backdrop aria-hidden="true"
-     class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-  <!-- sky: cool daylight up top fading to paper, with a touch of warmth at dawn/dusk -->
-  <div class="absolute inset-0"
-       style="background: linear-gradient(180deg,
-         color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.5) * 8%),
-           color-mix(in srgb, var(--color-sky) 72%, var(--color-paper))) 0%,
-         var(--color-paper) 52%);"></div>
+     class="pointer-events-none fixed inset-0 -z-10"
+     style="background: linear-gradient(180deg,
+       color-mix(in srgb, var(--color-sky) 50%, var(--color-paper)) 0%,
+       var(--color-paper) 40%,
+       color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 14%), var(--color-paper)) 72%,
+       color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 28%), var(--color-paper)) 100%);">
+</div>
 
-  <!-- layered ranges: faded far peaks reach up the page; solid range hugs the bottom -->
-  <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900"
-       preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-    <path fill="var(--color-ridge-1)" opacity="0.4"  d="M0 470 L200 380 L420 452 L650 360 L900 440 L1150 372 L1440 430 L1440 900 L0 900 Z"/>
-    <path fill="var(--color-ridge-2)" opacity="0.55" d="M0 562 L240 500 L470 562 L720 482 L980 560 L1240 500 L1440 540 L1440 900 L0 900 Z"/>
-    <path fill="var(--color-ridge-3)" opacity="0.68" d="M0 672 L260 610 L520 672 L780 602 L1040 672 L1300 610 L1440 652 L1440 900 L0 900 Z"/>
-    <path fill="var(--color-ridge-4)" opacity="0.82" d="M0 792 L320 742 L600 792 L880 742 L1160 792 L1440 752 L1440 900 L0 900 Z"/>
-    <!-- alpenglow: warm wash over the ranges, strongest at dawn/dusk -->
-    <rect x="0" y="300" width="1440" height="600" fill="var(--color-accent)"
-          style="opacity: calc(var(--tod, 0.4) * 0.2); mix-blend-mode: multiply;"/>
+<!-- 2. foreground mountain band; content scrolls behind it -->
+<div aria-hidden="true"
+     class="pointer-events-none fixed inset-x-0 bottom-0 z-10 overflow-hidden"
+     style="height: var(--mtn-h);">
+  <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 400"
+       preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="var(--color-ridge-1)" d="M0 232 L240 150 L470 214 L720 132 L980 208 L1230 140 L1440 200 L1440 400 L0 400 Z"/>
+    <path fill="var(--color-ridge-2)" d="M0 282 L240 216 L470 282 L720 200 L980 280 L1240 216 L1440 262 L1440 400 L0 400 Z"/>
+    <path fill="var(--color-ridge-3)" d="M0 332 L260 272 L520 332 L780 262 L1040 332 L1300 272 L1440 312 L1440 400 L0 400 Z"/>
+    <path fill="var(--color-ridge-4)" d="M0 382 L320 332 L600 382 L880 332 L1160 382 L1440 346 L1440 400 L0 400 Z"/>
   </svg>
 </div>

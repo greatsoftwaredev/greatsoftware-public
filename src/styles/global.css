@@ -21,6 +21,9 @@
 @layer base {
   html {
     --tod: 0.6;
+    /* height of the fixed foreground mountain band; the body reserves this much
+       (plus a little) bottom padding so content can scroll clear above the peaks */
+    --mtn-h: clamp(200px, 34vh, 360px);
     scroll-behavior: smooth;
   }
   @media (prefers-reduced-motion: reduce) {
@@ -36,6 +39,8 @@
     font-family: var(--font-body);
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    /* reserve room so the last content clears above the fixed mountain band */
+    padding-bottom: calc(var(--mtn-h) + 4rem);
   }
   h1, h2, h3, h4 {
     font-family: var(--font-heading);
