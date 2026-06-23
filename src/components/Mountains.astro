@@ -1,25 +1,59 @@
 ---
-// Two fixed layers that frame the page:
-//   1. A single soft atmospheric gradient covering the whole viewport. It glows
-//      warm near the horizon (strength from --tod / the visitor's local time)
-//      and fades smoothly up to a cool daylight sky — one continuous blend, no
-//      hard seam anywhere.
-//   2. A foreground mountain band pinned to the bottom of the viewport. Page
-//      content scrolls UP behind it; the body reserves --mtn-h of bottom padding
-//      so the final content clears above the peaks at the end of the scroll.
+// Backdrop = two crossfading scenes behind the page, plus a fixed foreground
+// mountain band that content scrolls behind.
+//
+//   • Day scene  — soft warm-to-cool glow driven by --tod (time of day).
+//   • Night scene — deep sky, a star field, and a moon; shown when <html>.night.
+//
+// The <head> controller toggles .night and sets --tod from the visitor's local
+// time (or a localStorage / gsGlow() override). The mountain band colours come
+// from the ridge tokens, which .night darkens, so the same band crossfades
+// between day and night via a fill transition.
+
+// Deterministic star field (no RNG, so builds stay reproducible). Kept in the
+// upper sky (y < 520) so stars sit above the mountain band.
+const stars = Array.from({ length: 52 }, (_, i) => ({
+  x: (i * 197 + 53) % 1440,
+  y: (i * 113 + 29) % 520,
+  r: 0.6 + ((i * 37) % 10) / 8,
+  o: 0.35 + ((i * 53) % 9) / 14,
+  twinkle: i % 6 === 0,
+}));
 ---
-<!-- 1. full-page glow, behind all content -->
-<div data-backdrop aria-hidden="true"
-     class="pointer-events-none fixed inset-0 -z-10"
-     style="background: linear-gradient(180deg,
-       color-mix(in srgb, var(--color-sky) 50%, var(--color-paper)) 0%,
-       var(--color-paper) 40%,
-       color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 14%), var(--color-paper)) 72%,
-       color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 28%), var(--color-paper)) 100%);">
+<!-- BACKDROP (behind all content) -->
+<div data-backdrop aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10">
+  <!-- day glow -->
+  <div data-glow-day class="absolute inset-0"
+       style="background: linear-gradient(180deg,
+         color-mix(in srgb, var(--color-sky) 50%, var(--color-paper)) 0%,
+         var(--color-paper) 40%,
+         color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 14%), var(--color-paper)) 72%,
+         color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 28%), var(--color-paper)) 100%);"></div>
+
+  <!-- night sky + stars + moon -->
+  <div data-glow-night class="absolute inset-0"
+       style="background: linear-gradient(180deg, #060A12 0%, #0A111E 42%, #101A2B 72%, #16243A 100%);">
+    <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900"
+         preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#CDD6E6" stop-opacity="0.45"/>
+          <stop offset="55%" stop-color="#CDD6E6" stop-opacity="0.10"/>
+          <stop offset="100%" stop-color="#CDD6E6" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <circle cx="1180" cy="195" r="155" fill="url(#moonGlow)"/>
+      <circle cx="1180" cy="195" r="38" fill="#EEF1F8"/>
+      {stars.map((s) => (
+        <circle cx={s.x} cy={s.y} r={s.r} fill="#EAF0FB" opacity={s.o}
+                class={s.twinkle ? "twinkle" : undefined} />
+      ))}
+    </svg>
+  </div>
 </div>
 
-<!-- 2. foreground mountain band; content scrolls behind it -->
-<div aria-hidden="true"
+<!-- FOREGROUND mountain band; content scrolls behind it -->
+<div data-mtn aria-hidden="true"
      class="pointer-events-none fixed inset-x-0 bottom-0 z-10 overflow-hidden"
      style="height: var(--mtn-h);">
   <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 400"

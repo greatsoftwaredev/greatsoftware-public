@@ -50,18 +50,26 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
       (function () {
         var KEY = "gs-glow", INT_KEY = "gs-glow-interval";
         var root = document.documentElement;
-        var PRESETS = { dawn: 0.8, day: 0.3, dusk: 0.9, night: 0.15 };
+        var PRESETS = {
+          dawn:  { tod: 0.8,  night: false },
+          day:   { tod: 0.3,  night: false },
+          dusk:  { tod: 0.9,  night: false },
+          night: { tod: 0.15, night: true  }
+        };
         var CYCLE = ["night", "dawn", "day", "dusk"];
         var timer = null;
 
         function ls(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-        function set(v) { root.style.setProperty("--tod", String(v)); }
-        function fromClock() {
+        function applyState(s) {
+          root.style.setProperty("--tod", String(s.tod));
+          root.classList.toggle("night", !!s.night);
+        }
+        function clockName() {
           var h = new Date().getHours();
-          return h >= 5 && h < 9 ? PRESETS.dawn
-               : h >= 9 && h < 16 ? PRESETS.day
-               : h >= 16 && h < 20 ? PRESETS.dusk
-               : PRESETS.night;
+          return h >= 5 && h < 9 ? "dawn"
+               : h >= 9 && h < 16 ? "day"
+               : h >= 16 && h < 20 ? "dusk"
+               : "night";
         }
 
         function apply() {
@@ -70,17 +78,17 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
           var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
           if (pref === "cycle" && !reduce) {
             var i = 0, ms = parseInt(ls(INT_KEY), 10) || 3500;
-            set(PRESETS[CYCLE[0]]);
+            applyState(PRESETS[CYCLE[0]]);
             timer = setInterval(function () {
               i = (i + 1) % CYCLE.length;
-              set(PRESETS[CYCLE[i]]);
+              applyState(PRESETS[CYCLE[i]]);
             }, ms);
-          } else if (pref && PRESETS[pref] != null) {
-            set(PRESETS[pref]);
+          } else if (pref && PRESETS[pref]) {
+            applyState(PRESETS[pref]);
           } else if (pref && !isNaN(parseFloat(pref))) {
-            set(Math.max(0, Math.min(1, parseFloat(pref))));
+            applyState({ tod: Math.max(0, Math.min(1, parseFloat(pref))), night: false });
           } else {
-            set(fromClock());
+            applyState(PRESETS[clockName()]);
           }
         }
 
