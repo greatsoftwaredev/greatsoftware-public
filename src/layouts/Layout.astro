@@ -35,6 +35,17 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <!-- Set the alpenglow intensity from the visitor's local time of day, before paint. -->
+    <script is:inline>
+      (function () {
+        var h = new Date().getHours();
+        var t = h >= 5 && h < 9 ? 0.8      // sunrise — warm glow building
+              : h >= 9 && h < 16 ? 0.3     // midday — bright, cool
+              : h >= 16 && h < 20 ? 0.9    // golden hour / dusk — peak alpenglow
+              : 0.15;                      // night — cool, dim
+        document.documentElement.style.setProperty("--tod", String(t));
+      })();
+    </script>
   </head>
   <body class="min-h-screen flex flex-col">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-3 focus:left-3 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-accent-ink focus:no-underline">Skip to content</a>
