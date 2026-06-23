@@ -18,6 +18,15 @@
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
+/* Register --tod as a typed number so the glow can animate between time-of-day
+   values instead of cutting instantly (plain custom properties aren't
+   interpolatable). The transition lives on <html>, where --tod is set. */
+@property --tod {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.6;
+}
+
 @layer base {
   html {
     --tod: 0.6;
@@ -25,6 +34,8 @@
        (plus a little) bottom padding so content can scroll clear above the peaks */
     --mtn-h: clamp(200px, 34vh, 360px);
     scroll-behavior: smooth;
+    /* fade the glow when --tod changes (time-of-day, locked, or cycling) */
+    transition: --tod 1.2s ease;
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
