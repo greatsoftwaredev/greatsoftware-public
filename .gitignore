@@ -28,3 +28,7 @@ test_logs/
 
 # Local dev artifacts
 .playwright-mcp/
+
+# Astro dev-server runtime files (background mode lockfile + telemetry; logs covered by *.log)
+.astro/dev.json
+.astro/settings.json
