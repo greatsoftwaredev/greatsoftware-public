@@ -51,10 +51,10 @@
        (small viewport) is stable — it doesn't recompute when the mobile URL bar
        shows/hides, so the band doesn't jump on scroll. */
     --mtn-h: clamp(200px, 34svh, 360px);
-    /* shorter band on short viewports (small laptops) so the mountains don't eat
-       too much vertical space; the body bottom-padding tracks --mtn-h, so it
-       shrinks in lockstep. */
-    @media (max-height: 820px) { --mtn-h: clamp(150px, 25svh, 240px); }
+    /* shorter band on shorter viewports (laptops) so the mountains don't eat too
+       much vertical space; the body bottom-padding tracks --mtn-h, so it shrinks
+       in lockstep. Tall external monitors (> 1100px) keep the full band. */
+    @media (max-height: 1100px) { --mtn-h: clamp(150px, 25svh, 280px); }
     scroll-behavior: smooth;
     /* Slow, ambient fade for the glow (--tod) and the full palette, so the
        day <-> night change drifts over ~2.5s rather than snapping. */
