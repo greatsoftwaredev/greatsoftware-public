@@ -46,9 +46,11 @@
 @layer base {
   html {
     --tod: 0.6;
-    /* height of the fixed foreground mountain band; the body reserves this much
-       (plus a little) bottom padding so content can scroll clear above the peaks */
-    --mtn-h: clamp(200px, 34vh, 360px);
+    /* height of the fixed mountain band; the body reserves this much (plus a
+       little) bottom padding so content can scroll clear above the peaks. svh
+       (small viewport) is stable — it doesn't recompute when the mobile URL bar
+       shows/hides, so the band doesn't jump on scroll. */
+    --mtn-h: clamp(200px, 34svh, 360px);
     scroll-behavior: smooth;
     /* Slow, ambient fade for the glow (--tod) and the full palette, so the
        day <-> night change drifts over ~2.5s rather than snapping. */
