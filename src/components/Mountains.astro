@@ -190,7 +190,7 @@ const cloudFilters = ["gsCloudA", "gsCloudB", "gsCloudC"];
   {clouds.map((c, i) => (
     <div data-parallax={c.p} class="absolute" style={`top:${c.top}; left:${c.left}; width:${c.w};`}>
       <svg class="gs-cloud" viewBox="0 0 240 110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-           style={`width:100%; overflow:visible; opacity:${(c.op * 0.45).toFixed(2)}; animation-duration:${c.dur};`}>
+           style={`width:100%; overflow:visible; opacity:${(c.op * 0.3).toFixed(2)}; animation-duration:${c.dur};`}>
         <g fill="url(#cloudFillNight)" filter={`url(#${cloudFilters[i % cloudFilters.length]})`}>
           <ellipse cx="78" cy="68" rx="46" ry="28"/>
           <ellipse cx="128" cy="54" rx="56" ry="38"/>
