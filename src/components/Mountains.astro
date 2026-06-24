@@ -106,9 +106,9 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
 // page = more distant); `dur` = drift speed. Each is a parallax wrapper (vertical
 // scroll-lag) around a drifting blob, so the two transforms don't collide.
 const clouds = [
-  { top: "15%", left: "6%",  w: "clamp(170px, 28vw, 320px)", dur: "95s",  op: 0.5,  p: 0.4 },
-  { top: "27%", left: "60%", w: "clamp(130px, 22vw, 250px)", dur: "130s", op: 0.42, p: 0.34 },
-  { top: "43%", left: "47%", w: "clamp(110px, 18vw, 210px)", dur: "78s",  op: 0.36, p: 0.46 },
+  { top: "15%", left: "6%",  w: "clamp(170px, 28vw, 320px)", dur: "95s",  op: 0.62, p: 0.4 },
+  { top: "27%", left: "60%", w: "clamp(130px, 22vw, 250px)", dur: "130s", op: 0.52, p: 0.34 },
+  { top: "43%", left: "47%", w: "clamp(110px, 18vw, 210px)", dur: "78s",  op: 0.45, p: 0.46 },
 ];
 // Each cloud is a lumpy silhouette (overlapping puffs + flat base) warped by an
 // feTurbulence/feDisplacementMap filter into organic fluff. Three filter seeds
@@ -190,7 +190,7 @@ const cloudFilters = ["gsCloudA", "gsCloudB", "gsCloudC"];
   {clouds.map((c, i) => (
     <div data-parallax={c.p} class="absolute" style={`top:${c.top}; left:${c.left}; width:${c.w};`}>
       <svg class="gs-cloud" viewBox="0 0 240 110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-           style={`width:100%; overflow:visible; opacity:${(c.op * 0.7).toFixed(2)}; animation-duration:${c.dur};`}>
+           style={`width:100%; overflow:visible; opacity:${(c.op * 0.45).toFixed(2)}; animation-duration:${c.dur};`}>
         <g fill="url(#cloudFillNight)" filter={`url(#${cloudFilters[i % cloudFilters.length]})`}>
           <ellipse cx="78" cy="68" rx="46" ry="28"/>
           <ellipse cx="128" cy="54" rx="56" ry="38"/>
