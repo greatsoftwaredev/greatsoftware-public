@@ -120,6 +120,12 @@ html.night [data-glow-night] { opacity: 1; }
 .twinkle { animation: twinkle 3.2s ease-in-out infinite; }
 @keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.95; } }
 
+/* Day cloud drift. Sits inside a parallax wrapper, so this transform (X) and the
+   parallax transform (Y) don't collide. animation-duration is set per cloud
+   inline. Neutralised under prefers-reduced-motion by the global rule. */
+.gs-cloud { animation: gs-cloud-drift linear infinite alternate; will-change: transform; }
+@keyframes gs-cloud-drift { from { transform: translateX(-7%); } to { transform: translateX(7%); } }
+
 /* Nav theme toggle: show only the icon for the current mode. */
 [data-theme-toggle] svg { display: none; }
 [data-theme-toggle][data-mode="auto"] svg[data-icon="auto"],

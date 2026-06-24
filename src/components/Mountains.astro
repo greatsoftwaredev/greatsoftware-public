@@ -1,11 +1,16 @@
 ---
-// Three layers with distinct scroll behaviour:
+// Layers with distinct scroll behaviour:
 //
-//   (1) FIXED sky gradient — the day/night background colour. Stays put.
-//   (2) SCROLLING stars + moon — absolute at the page top, so the night sky
-//       elements scroll up and off as you scroll down. Behind content.
-//   (3) FIXED mountains + backlight glow — kept together in FRONT of content
-//       (under the nav), so content scrolls up from behind the mountains.
+//   (1)  FIXED sky gradient — the day/night background colour. Stays put.
+//   (2)  SCROLLING night sky — stars + moon, absolute at the page top, so they
+//        scroll up and off as you scroll down. Behind content.
+//   (2b) SCROLLING day sky — sun + clouds + birds, mirror of (2). Day-only.
+//   (3)  FIXED mountains + backlight glow — kept together in FRONT of content
+//        (under the nav), so content scrolls up from behind the mountains.
+//
+// Sky elements carry data-parallax factors; a small script drifts them slower
+// than the page (translateY = scroll x factor) for depth. Moon/sun are slowest
+// (most distant), birds fastest. Disabled under prefers-reduced-motion.
 //
 //   • Day scene  — soft warm-to-cool glow driven by --tod (time of day).
 //   • Night scene — deep sky, a star field, and a moon; shown when <html>.night.
@@ -96,6 +101,15 @@ const layers = [
 const ridges = layers.map((l) => ({ fill: l.fill, d: buildPath(l.ys) }));
 // skyline = topmost outline across all ranges (the edge that gets back-lit)
 const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) => l.ys[i]))));
+
+// Day-sky clouds: soft drifting blobs. `p` = parallax factor (slower than the
+// page = more distant); `dur` = drift speed. Each is a parallax wrapper (vertical
+// scroll-lag) around a drifting blob, so the two transforms don't collide.
+const clouds = [
+  { top: "15%", left: "6%",  w: "clamp(170px, 28vw, 320px)", dur: "95s",  op: 0.7,  p: 0.4 },
+  { top: "27%", left: "60%", w: "clamp(130px, 22vw, 250px)", dur: "130s", op: 0.5,  p: 0.34 },
+  { top: "41%", left: "28%", w: "clamp(110px, 18vw, 210px)", dur: "78s",  op: 0.4,  p: 0.46 },
+];
 ---
 <!-- (1) FIXED sky gradient (day <-> night). Stays put while the page scrolls;
      stable large-viewport height (100lvh) so the mobile URL bar doesn't make it
@@ -119,7 +133,7 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
 <div data-glow-night aria-hidden="true"
      class="pointer-events-none absolute top-0 left-0 w-full -z-10 overflow-hidden"
      style="height: 100vh;">
-  <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900"
+  <svg data-parallax="0.28" class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900"
        preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     {stars.map((s) => (
       <circle cx={s.x} cy={s.y} r={s.r} fill="#EAF0FB" opacity={s.o}
@@ -127,8 +141,8 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
     ))}
   </svg>
   <!-- moon: its own element (not in the sliced star SVG) so it stays on-screen at
-       any width — upper-right on desktop and mobile alike. -->
-  <div data-glow-moon class="absolute"
+       any width — upper-right on desktop and mobile alike. Slowest parallax = most distant. -->
+  <div data-glow-moon data-parallax="0.5" class="absolute"
        style="top: 8%; right: 9%; width: clamp(170px, 30vw, 300px); aspect-ratio: 1;
          background: radial-gradient(circle,
            rgba(205,214,230,0.45) 0%, rgba(205,214,230,0.10) 32%, transparent 62%);">
@@ -136,6 +150,45 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
          style="top: 50%; left: 50%; width: 25%; aspect-ratio: 1;
            transform: translate(-50%, -50%); background: #EEF1F8;"></div>
   </div>
+</div>
+
+<!-- (2b) SCROLLING day sky — sun, clouds, birds. Mirrors the night layer: shown by
+     day (crossfades via data-glow-day), scrolls off, behind content. All tinted by
+     --tod so they warm toward terracotta at dawn/dusk. -->
+<div data-glow-day aria-hidden="true"
+     class="pointer-events-none absolute top-0 left-0 w-full -z-10 overflow-hidden"
+     style="height: 100vh;">
+  <!-- sun: warm disc + halo; tint deepens toward terracotta as --tod rises (dawn/dusk) -->
+  <div data-parallax="0.5" class="absolute"
+       style="top: 9%; right: 10%; width: clamp(150px, 26vw, 260px); aspect-ratio: 1;
+         background: radial-gradient(circle,
+           color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 22%), #FFF5E6) 0%,
+           color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 28%), rgba(255,245,230,0.30)) 28%,
+           transparent 64%);">
+    <div class="absolute rounded-full"
+         style="top: 50%; left: 50%; width: 34%; aspect-ratio: 1; transform: translate(-50%, -50%);
+           background: color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 45%), #FFF3DC);"></div>
+  </div>
+
+  <!-- clouds: parallax wrapper (vertical scroll-lag) around a drifting blob -->
+  {clouds.map((c) => (
+    <div data-parallax={c.p} class="absolute" style={`top:${c.top}; left:${c.left}; width:${c.w};`}>
+      <div class="gs-cloud" style={`aspect-ratio: 5 / 2; opacity:${c.op}; animation-duration:${c.dur};
+        background: radial-gradient(ellipse closest-side,
+          color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 9%), #FFFFFF) 0%,
+          color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 7%), rgba(255,255,255,0.55)) 46%,
+          transparent 72%);`} />
+    </div>
+  ))}
+
+  <!-- birds: a small distant flock above the peaks (ink silhouette on the day sky) -->
+  <svg data-parallax="0.22" class="absolute" style="top: 38%; left: 56%; width: clamp(64px, 11vw, 110px);"
+       viewBox="0 0 100 40" fill="none" stroke="var(--color-ink)" stroke-width="2.2"
+       stroke-linecap="round" opacity="0.45" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 15 Q12 8 18 15 Q24 8 30 15"/>
+    <path d="M41 8 Q48 1 55 8 Q62 1 69 8"/>
+    <path d="M63 23 Q69 17 75 23 Q81 17 87 23"/>
+  </svg>
 </div>
 
 <!-- (3) FIXED foreground — the mountain band and its backlight glow, kept TOGETHER
@@ -180,3 +233,26 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
     {ridges.map((r) => <path fill={r.fill} d={r.d} />)}
   </svg>
 </div>
+
+<!-- Parallax: sky elements drift slower than the page (translateY = scroll x factor)
+     for depth. rAF-throttled, passive, and skipped under reduced-motion. Factors
+     live on each element's data-parallax (moon/sun slowest → birds fastest). -->
+<script is:inline>
+  (function () {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var els = [].slice.call(document.querySelectorAll("[data-parallax]"));
+    if (!els.length) return;
+    var ticking = false;
+    function update() {
+      var y = window.scrollY || window.pageYOffset || 0;
+      for (var i = 0; i < els.length; i++) {
+        var f = parseFloat(els[i].getAttribute("data-parallax")) || 0;
+        els[i].style.transform = "translate3d(0," + (y * f).toFixed(1) + "px,0)";
+      }
+      ticking = false;
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+  })();
+</script>
