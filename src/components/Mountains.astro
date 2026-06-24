@@ -110,12 +110,43 @@ const clouds = [
   { top: "27%", left: "60%", w: "clamp(130px, 22vw, 250px)", dur: "130s", op: 0.7,  p: 0.34 },
   { top: "41%", left: "28%", w: "clamp(110px, 18vw, 210px)", dur: "78s",  op: 0.6,  p: 0.46 },
 ];
-// Cloud paint per scene. Day = white core with a soft cool-grey (ridge) edge so
-// it actually reads against the pale sky (pure white on cream is invisible).
-// Night = a faint moonlit wisp on the dark sky.
-const cloudDayBg = "radial-gradient(ellipse closest-side, rgba(255,255,255,0.97) 0%, color-mix(in srgb, var(--color-ridge-2) 30%, rgba(255,255,255,0.55)) 46%, transparent 76%)";
-const cloudNightBg = "radial-gradient(ellipse closest-side, rgba(198,212,235,0.18) 0%, rgba(198,212,235,0.06) 52%, transparent 76%)";
+// Each cloud is a lumpy silhouette (overlapping puffs + flat base) warped by an
+// feTurbulence/feDisplacementMap filter into organic fluff. Three filter seeds
+// give variety; assigned per cloud by index.
+const cloudFilters = ["gsCloudA", "gsCloudB", "gsCloudC"];
 ---
+<!-- Cloud filters + fills (hidden). feTurbulence warps a lumpy puff silhouette
+     into organic fluff; a touch of blur softens it. Three seeds for variety. -->
+<svg width="0" height="0" aria-hidden="true" style="position:absolute" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="gsCloudA" x="-50%" y="-140%" width="200%" height="380%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="4" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <filter id="gsCloudB" x="-50%" y="-140%" width="200%" height="380%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="4" seed="17" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="28" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <filter id="gsCloudC" x="-50%" y="-140%" width="200%" height="380%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.013" numOctaves="4" seed="29" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="32" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="1.6"/>
+    </filter>
+    <!-- soft top-lit shading: white crown, faint cool underside -->
+    <linearGradient id="cloudFillDay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="62%" stop-color="#F2F5F9"/>
+      <stop offset="100%" stop-color="#C6D2E0"/>
+    </linearGradient>
+    <linearGradient id="cloudFillNight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5E6E86"/>
+      <stop offset="100%" stop-color="#2B3344"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <!-- (1) FIXED sky gradient (day <-> night). Stays put while the page scrolls;
      stable large-viewport height (100lvh) so the mobile URL bar doesn't make it
      resize + snap. Backmost (-z-20), behind content and the scrolling sky. -->
@@ -155,10 +186,18 @@ const cloudNightBg = "radial-gradient(ellipse closest-side, rgba(198,212,235,0.1
          style="top: 50%; left: 50%; width: 25%; aspect-ratio: 1;
            transform: translate(-50%, -50%); background: #EEF1F8;"></div>
   </div>
-  <!-- faint moonlit cloud wisps (same positions/drift as day, dark-sky paint) -->
-  {clouds.map((c) => (
+  <!-- moonlit clouds (same shapes/positions as day, dark-sky fill, subtler) -->
+  {clouds.map((c, i) => (
     <div data-parallax={c.p} class="absolute" style={`top:${c.top}; left:${c.left}; width:${c.w};`}>
-      <div class="gs-cloud" style={`aspect-ratio: 5 / 2; opacity:${c.op}; animation-duration:${c.dur}; background:${cloudNightBg};`} />
+      <svg class="gs-cloud" viewBox="0 0 240 110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+           style={`width:100%; overflow:visible; opacity:${(c.op * 0.7).toFixed(2)}; animation-duration:${c.dur};`}>
+        <g fill="url(#cloudFillNight)" filter={`url(#${cloudFilters[i % cloudFilters.length]})`}>
+          <ellipse cx="78" cy="68" rx="46" ry="28"/>
+          <ellipse cx="128" cy="54" rx="56" ry="38"/>
+          <ellipse cx="172" cy="70" rx="44" ry="26"/>
+          <rect x="42" y="64" width="158" height="30" rx="15"/>
+        </g>
+      </svg>
     </div>
   ))}
 </div>
@@ -181,10 +220,18 @@ const cloudNightBg = "radial-gradient(ellipse closest-side, rgba(198,212,235,0.1
            background: color-mix(in srgb, var(--color-accent) calc(var(--tod, 0.4) * 45%), #FFF3DC);"></div>
   </div>
 
-  <!-- clouds: parallax wrapper (vertical scroll-lag) around a drifting blob -->
-  {clouds.map((c) => (
+  <!-- clouds: parallax wrapper (vertical scroll-lag) around a drifting cloud SVG -->
+  {clouds.map((c, i) => (
     <div data-parallax={c.p} class="absolute" style={`top:${c.top}; left:${c.left}; width:${c.w};`}>
-      <div class="gs-cloud" style={`aspect-ratio: 5 / 2; opacity:${c.op}; animation-duration:${c.dur}; background:${cloudDayBg};`} />
+      <svg class="gs-cloud" viewBox="0 0 240 110" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+           style={`width:100%; overflow:visible; opacity:${c.op}; animation-duration:${c.dur};`}>
+        <g fill="url(#cloudFillDay)" filter={`url(#${cloudFilters[i % cloudFilters.length]})`}>
+          <ellipse cx="78" cy="68" rx="46" ry="28"/>
+          <ellipse cx="128" cy="54" rx="56" ry="38"/>
+          <ellipse cx="172" cy="70" rx="44" ry="26"/>
+          <rect x="42" y="64" width="158" height="30" rx="15"/>
+        </g>
+      </svg>
     </div>
   ))}
 
