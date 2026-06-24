@@ -130,13 +130,13 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
           return "light";                               // dawn/day/dusk/number/cycle -> light-ish
         }
         function updateToggle() {
-          var btn = document.querySelector("[data-theme-toggle]");
-          if (!btn) return;
           var m = currentMode();
-          btn.setAttribute("data-mode", m);
           var label = m === "auto" ? "Theme: auto (match system)" : m === "light" ? "Theme: light" : "Theme: dark";
-          btn.setAttribute("aria-label", label);
-          btn.setAttribute("title", label);
+          document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
+            btn.setAttribute("data-mode", m);
+            btn.setAttribute("aria-label", label);
+            btn.setAttribute("title", label);
+          });
         }
         function cycleMode() {
           var order = ["auto", "light", "dark"];
@@ -144,8 +144,9 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
           apply(true);                                  // user action -> snappy fade
         }
         function wire() {
-          var btn = document.querySelector("[data-theme-toggle]");
-          if (btn && !btn.hasAttribute("data-wired")) { btn.setAttribute("data-wired", "1"); btn.addEventListener("click", cycleMode); }
+          document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
+            if (!btn.hasAttribute("data-wired")) { btn.setAttribute("data-wired", "1"); btn.addEventListener("click", cycleMode); }
+          });
           updateToggle();
         }
 
