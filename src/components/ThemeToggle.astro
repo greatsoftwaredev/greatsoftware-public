@@ -1,0 +1,25 @@
+---
+// Theme toggle button (auto → light → dark). Wired + kept in sync by the
+// controller in Layout.astro, which targets every [data-theme-toggle]. Used in
+// the desktop header (icon only) and the mobile menu (icon + "Theme" label).
+interface Props {
+  label?: boolean;
+  class?: string;
+}
+const { label = false, class: cls = "" } = Astro.props;
+---
+<button type="button" data-theme-toggle data-mode="auto" aria-label="Toggle theme"
+        class:list={["inline-flex items-center justify-center gap-2 rounded-md text-muted hover:text-ink transition-colors duration-200 cursor-pointer", cls]}>
+  <svg data-icon="auto" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="12" cy="12" r="8.2"/>
+    <path d="M12 3.8a8.2 8.2 0 0 0 0 16.4z" fill="currentColor" stroke="none"/>
+  </svg>
+  <svg data-icon="light" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+    <circle cx="12" cy="12" r="4.2"/>
+    <path d="M12 2.6v2.1M12 19.3v2.1M21.4 12h-2.1M4.7 12H2.6M18.4 5.6l-1.5 1.5M7.1 16.9l-1.5 1.5M18.4 18.4l-1.5-1.5M7.1 7.1 5.6 5.6"/>
+  </svg>
+  <svg data-icon="dark" aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20.2 14.6A8 8 0 0 1 9.4 3.8 7 7 0 1 0 20.2 14.6z"/>
+  </svg>
+  {label && <span class="font-mono text-sm">Theme</span>}
+</button>
