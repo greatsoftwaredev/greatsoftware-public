@@ -144,8 +144,12 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
      bug where the glow sat behind the cards while the ridges sat in front.
      Held at >= the viewBox width and centered, so narrow screens crop a true-shape
      slice (via overflow-hidden) instead of squishing. -->
+<!-- Anchored bottom-0 (not top-0): the ridge stays pinned to the *visible*
+     viewport bottom, so it glides with the mobile URL bar instead of dropping
+     below the fold + popping back when the bar hides. Height stays a stable
+     100lvh so the band doesn't resize and the glow keeps its upward room. -->
 <div data-mtn aria-hidden="true"
-     class="pointer-events-none fixed top-0 left-0 w-full z-10 overflow-hidden"
+     class="pointer-events-none fixed bottom-0 left-0 w-full z-10 overflow-hidden"
      style="height: 100vh; height: 100lvh;">
   <!-- backlight: blurred skyline outline, glows up along the whole ridge edge.
        Same width/centering as the band below so the rim stays aligned. -->
