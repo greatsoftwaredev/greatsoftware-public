@@ -1,13 +1,13 @@
 ---
-// Backdrop = two crossfading scenes behind the page, plus a fixed foreground
-// mountain band that content scrolls behind.
+// Backdrop = two crossfading scenes plus a mountain band, all in one fixed
+// container behind the page (-z-10), so content scrolls cleanly on top.
 //
 //   • Day scene  — soft warm-to-cool glow driven by --tod (time of day).
 //   • Night scene — deep sky, a star field, and a moon; shown when <html>.night.
 //
 // A soft white backlight traces the whole skyline: a blurred copy of the
-// topmost ridge outline sits in the sky layer, behind the opaque foreground
-// mountains, so the entire ridge edge reads as rim-lit / back-lit.
+// topmost ridge outline sits behind the opaque foreground mountains, so the
+// entire ridge edge reads as rim-lit / back-lit.
 //
 // The <head> controller toggles .night and sets --tod from the visitor's local
 // time (or a localStorage / gsGlow() override). The mountain band colours come
@@ -92,8 +92,15 @@ const ridges = layers.map((l) => ({ fill: l.fill, d: buildPath(l.ys) }));
 // skyline = topmost outline across all ranges (the edge that gets back-lit)
 const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) => l.ys[i]))));
 ---
-<!-- BACKDROP (behind all content) -->
-<div data-backdrop aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10">
+<!-- BACKDROP — sky, stars, moon, and the mountain band, all behind page content.
+     One fixed container, anchored to the top at a STABLE large-viewport height
+     (100lvh), so the mobile URL bar reveals/hides the mountains instead of
+     resizing + snapping them on scroll. Sits at -z-10 so content scrolls cleanly
+     on top (the mountains never cover cards). overflow-hidden crops the sides so
+     the silhouette below keeps its true shape and is sliced, not squished. -->
+<div data-backdrop aria-hidden="true"
+     class="pointer-events-none fixed top-0 left-0 w-full -z-10 overflow-hidden"
+     style="height: 100vh; height: 100lvh;">
   <!-- day glow -->
   <div data-glow-day class="absolute inset-0"
        style="background: linear-gradient(180deg,
@@ -107,24 +114,27 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
        style="background: linear-gradient(180deg, #060A12 0%, #0A111E 42%, #101A2B 72%, #16243A 100%);">
     <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900"
          preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#CDD6E6" stop-opacity="0.45"/>
-          <stop offset="55%" stop-color="#CDD6E6" stop-opacity="0.10"/>
-          <stop offset="100%" stop-color="#CDD6E6" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
-      <circle cx="1180" cy="195" r="155" fill="url(#moonGlow)"/>
-      <circle cx="1180" cy="195" r="38" fill="#EEF1F8"/>
       {stars.map((s) => (
         <circle cx={s.x} cy={s.y} r={s.r} fill="#EAF0FB" opacity={s.o}
                 class={s.twinkle ? "twinkle" : undefined} />
       ))}
     </svg>
+    <!-- moon: its own element (not in the sliced star SVG) so it stays on-screen
+         at any width — upper-right on desktop and mobile alike. -->
+    <div data-glow-moon class="absolute"
+         style="top: 8%; right: 9%; width: clamp(170px, 30vw, 300px); aspect-ratio: 1;
+           background: radial-gradient(circle,
+             rgba(205,214,230,0.45) 0%, rgba(205,214,230,0.10) 32%, transparent 62%);">
+      <div class="absolute rounded-full"
+           style="top: 50%; left: 50%; width: 25%; aspect-ratio: 1;
+             transform: translate(-50%, -50%); background: #EEF1F8;"></div>
+    </div>
   </div>
 
-  <!-- backlight: blurred skyline outline, glows up along the whole ridge edge -->
-  <svg class="absolute inset-x-0 bottom-0 w-full" style="height: var(--mtn-h); overflow: visible;"
+  <!-- backlight: blurred skyline outline, glows up along the whole ridge edge.
+       Same width/centering as the foreground band so the rim stays aligned. -->
+  <svg class="absolute bottom-0 left-1/2 -translate-x-1/2"
+       style="width: max(100%, 1440px); height: var(--mtn-h); overflow: visible;"
        viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <filter id="skyHaloWide" x="-25%" y="-320%" width="150%" height="600%">
@@ -141,14 +151,14 @@ const skyline = buildPath(layers[0].ys.map((_, i) => Math.min(...layers.map((l) 
     <path d={skyline} fill="rgba(255,253,247,0.22)" filter="url(#skyHalo)"/>
     <path d={skyline} fill="rgba(255,254,250,0.42)" filter="url(#skyRim)"/>
   </svg>
-</div>
 
-<!-- FOREGROUND mountain band; content scrolls behind it -->
-<div data-mtn aria-hidden="true"
-     class="pointer-events-none fixed inset-x-0 bottom-0 z-10 overflow-hidden"
-     style="height: var(--mtn-h);">
-  <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 400"
-       preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- foreground mountain band. Held at >= the viewBox width and centered, so on
+       narrow screens it overflows (cropped by the container) and keeps its true
+       proportions instead of squishing. Painted after the backlight so the rim
+       reads only above the ridgeline. -->
+  <svg class="absolute bottom-0 left-1/2 -translate-x-1/2"
+       style="width: max(100%, 1440px); height: var(--mtn-h);"
+       viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
     {ridges.map((r) => <path fill={r.fill} d={r.d} />)}
   </svg>
 </div>
