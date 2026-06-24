@@ -49,7 +49,8 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
            the hour's glow.
         3. No OS preference -> our local-time clock (day glows + night at night).
       Toggle cycles auto -> light -> dark. Cycle speed: "gs-glow-interval" (ms,
-      default 30000). User actions fade quickly; ambient drift uses the slow ~30s.
+      default 30000). User actions fade quickly; ambient drift uses ~2.5s.
+      Console API: gsGlow.day() / .night() / .cycle() / .auto() … (gsGlow.help()).
     -->
     <script is:inline>
       (function () {
@@ -148,9 +149,25 @@ const canonical = new URL(Astro.url.pathname, site.url).href;
           updateToggle();
         }
 
-        // programmatic control (snappy)
-        window.gsGlow = function (v) { setLS((v == null || v === "auto") ? null : String(v)); apply(true); };
+        // Console API — type `gsGlow` to see the methods, or gsGlow.help().
+        function pick(v) { setLS((v == null || v === "auto") ? null : String(v)); apply(true); }
+        window.gsGlow = {
+          auto:  function () { pick("auto"); },   // follow OS / local time (default)
+          light: function () { pick("light"); },  // day scene, glow follows the hour
+          dark:  function () { pick("dark"); },    // night scene
+          dawn:  function () { pick("dawn"); },    // locked warm sunrise glow
+          day:   function () { pick("day"); },     // locked bright midday glow
+          dusk:  function () { pick("dusk"); },    // locked golden-hour glow
+          night: function () { pick("night"); },   // locked night scene
+          cycle: function () { pick("cycle"); },   // loop night -> dawn -> day -> dusk
+          set:   function (n) { pick(n); },         // custom glow intensity, 0..1
+          help:  function () {
+            console.log("gsGlow: .auto() .light() .dark() .dawn() .day() .dusk() .night() .cycle() .set(0..1)");
+            return "theme controls";
+          }
+        };
         window.gsTheme = { cycle: cycleMode, wire: wire };
+        console.log("%c⛰ gsGlow", "color:#C04F2B;font-weight:600", "— theme playground, try gsGlow.help()");
 
         // follow OS scheme changes while in auto (ambient / slow)
         function onOS() { if (currentMode() === "auto") apply(); }
