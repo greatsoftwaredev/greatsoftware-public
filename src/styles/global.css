@@ -51,15 +51,15 @@
     --mtn-h: clamp(200px, 34vh, 360px);
     scroll-behavior: smooth;
     /* Slow, ambient fade for the glow (--tod) and the full palette, so the
-       day <-> night change drifts over ~30s rather than snapping. */
+       day <-> night change drifts over ~2.5s rather than snapping. */
     transition:
-      --tod 30s ease-in-out,
-      --color-paper 30s ease-in-out, --color-sky 30s ease-in-out,
-      --color-ink 30s ease-in-out, --color-muted 30s ease-in-out,
-      --color-line 30s ease-in-out,
-      --color-ridge-1 30s ease-in-out, --color-ridge-2 30s ease-in-out,
-      --color-ridge-3 30s ease-in-out, --color-ridge-4 30s ease-in-out,
-      --color-accent 30s ease-in-out, --color-accent-ink 30s ease-in-out;
+      --tod 2.5s ease-in-out,
+      --color-paper 2.5s ease-in-out, --color-sky 2.5s ease-in-out,
+      --color-ink 2.5s ease-in-out, --color-muted 2.5s ease-in-out,
+      --color-line 2.5s ease-in-out,
+      --color-ridge-1 2.5s ease-in-out, --color-ridge-2 2.5s ease-in-out,
+      --color-ridge-3 2.5s ease-in-out, --color-ridge-4 2.5s ease-in-out,
+      --color-accent 2.5s ease-in-out, --color-accent-ink 2.5s ease-in-out;
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -109,7 +109,7 @@ html.night {
 }
 
 /* Crossfade the two backdrop scenes (slow, to match the palette fade). */
-[data-glow-day], [data-glow-night] { transition: opacity 30s ease-in-out; }
+[data-glow-day], [data-glow-night] { transition: opacity 2.5s ease-in-out; }
 [data-glow-night] { opacity: 0; }
 html.night [data-glow-day] { opacity: 0; }
 html.night [data-glow-night] { opacity: 1; }
@@ -125,7 +125,7 @@ html.night [data-glow-night] { opacity: 1; }
 [data-theme-toggle][data-mode="dark"] svg[data-icon="dark"] { display: block; }
 
 /* Snappier fade for deliberate user actions (toggle / gsGlow); the ambient
-   time-of-day + OS drift keep the slow ~30s feel. */
+   time-of-day + OS drift use a slightly gentler ~2.5s fade. */
 html[data-fade="fast"] { transition-duration: 1.2s; }
 html[data-fade="fast"] [data-glow-day],
 html[data-fade="fast"] [data-glow-night] { transition-duration: 1.2s; }

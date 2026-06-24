@@ -5,13 +5,13 @@ import AlpenglowHero from "../components/AlpenglowHero.astro";
 
 const services = [
   {
-    k: "agents",
+    k: "ai consulting and implementation",
     t: "Agentic systems & orchestration",
     d: "I design, build, and tune AI agents and the workflows that coordinate them, with one goal: systems reliable enough to run in production, not just demo well. I run my own multi-agent platform operating real businesses, so this is daily practice, not theory.",
     cta: "Talk through a project",
   },
   {
-    k: "builds",
+    k: "custom builds",
     t: "Product & client builds",
     d: "From first prototype to shipped software. I start from the real problem, build the smallest version that proves the idea, and put it in front of real users and real load.",
     cta: "Start a build",
@@ -77,7 +77,7 @@ const steps = [
     <div class="grid gap-6 sm:grid-cols-3">
       {steps.map((s, i) => (
         <div class="flex flex-col gap-2">
-          <span class="font-mono text-sm text-accent">0{i + 1} · {s.k}</span>
+          <span class="font-mono text-sm text-accent">0{i + 1}</span>
           <h3 class="text-xl">{s.t}</h3>
           <p class="text-muted m-0">{s.d}</p>
         </div>
