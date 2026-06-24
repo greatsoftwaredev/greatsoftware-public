@@ -6,7 +6,7 @@ export const site = {
   name: "Great Software",
   tagline: "A whole range of software.",
   oneLiner:
-    "Products, client builds, and agentic systems consulting — held to one standard: software that actually works in the real world.",
+    "Products, client builds, and agentic systems consulting, all held to one standard: software that actually works in the real world.",
   domain: "greatsoftware.dev",
   url: "https://greatsoftware.dev",
   legalUpdated: "June 16, 2026",
