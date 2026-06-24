@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "dev:bg": "astro dev --background",
+    "dev:status": "astro dev status",
+    "dev:logs": "astro dev logs",
+    "dev:stop": "astro dev stop",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
