@@ -2,37 +2,46 @@
 import Layout from "../layouts/Layout.astro";
 import { site } from "../config/site";
 ---
-<Layout title="About" description="How Great Software works — an independent software studio across products, client work, and agentic systems consulting.">
-  <section class="mx-auto max-w-3xl px-6 pt-24 pb-16">
-    <p class="font-mono text-sm text-accent mb-4">About the studio</p>
-    <h1 class="text-4xl md:text-5xl tracking-tight">A whole range of software.</h1>
-    <div class="mt-8 flex flex-col gap-5 text-lg text-muted">
-      <p>{site.name} is an independent software studio, founded on a simple idea: instead of betting everything on one product, take on a broad range of work and hold all of it to one standard — software that actually works in the real world.</p>
-      <p>The work spans three kinds. Its own products, built and run in-house. Client and consulting builds, including agentic systems and orchestration. And research — some of it never ships, but it sharpens the next thing.</p>
-      <p>The common thread isn't a single product or a single market. It's range, and the craft to do each kind of work well.</p>
+<Layout title="About" description="An independent software studio bringing genuinely great software to clients and the world, across its own products, client builds, and agentic systems consulting.">
+  <section class="mx-auto max-w-6xl px-6 pt-24 pb-16">
+    <div class="max-w-3xl">
+      <p class="font-mono text-sm text-accent mb-4">About the studio</p>
+      <h1 class="text-4xl md:text-5xl tracking-tight">A whole range of software.</h1>
+      <div class="mt-8 flex flex-col gap-5 text-lg text-muted">
+        <p>{site.name} is an independent software studio, and we exist to bring genuinely great software into the world. The kind that works in real life, earns trust, and quietly makes something better for the people who use it.</p>
+        <p>We take on a deliberately wide range of work. Some of it is our own products. Some is built hand in hand with clients. And some is research that never ships but sharpens everything that comes after. The common thread isn't a single market or a single product. It's range, and the craft to do each kind of work well.</p>
+        <p>For the founders and teams we work with, that means a partner who can take a big, messy idea, break it down to what actually matters, and build something powerful, scalable, and genuinely helpful. We care about the details people feel, we ship work that holds up under real load, and we stand behind everything we make.</p>
+      </div>
+
+      <h2 class="text-2xl mt-16 mb-6">The work</h2>
+      <ul class="flex flex-col gap-6 list-none m-0 p-0">
+        <li>
+          <span class="font-mono text-sm text-accent">agentic systems &amp; orchestration</span>
+          <div class="text-muted mt-1">Design, build, and tuning for AI agents and the workflows that coordinate them, so they hold up in production rather than just demo well. It's backed by a multi-agent platform already running real businesses, so it's daily practice, not theory.</div>
+        </li>
+        <li>
+          <span class="font-mono text-sm text-accent">product &amp; client builds</span>
+          <div class="text-muted mt-1">From first prototype to shipped software. Some of it runs in house, and some is designed and handed off cleanly.</div>
+        </li>
+      </ul>
+
+      <h2 class="text-2xl mt-16 mb-6">How it works</h2>
+      <ol class="flex flex-col gap-6 list-none m-0 p-0">
+        <li><span class="font-mono text-sm text-accent">01 · build</span><div class="text-muted mt-1">Start from the actual problem. Pick the smallest thing that proves the idea, then make it real.</div></li>
+        <li><span class="font-mono text-sm text-accent">02 · ship</span><div class="text-muted mt-1">Put it in front of real users and real load. Refine the flows people touch most.</div></li>
+        <li><span class="font-mono text-sm text-accent">03 · support</span><div class="text-muted mt-1">Stand behind it. Keep measuring, keep improving, or hand it off cleanly.</div></li>
+      </ol>
+
+      <h2 class="text-2xl mt-16 mb-6">Who's behind it</h2>
+      <div class="flex flex-col gap-5 text-muted">
+        <p>Great Software is led by Gunnar Gabrielson, a principled engineer who has seen a lot of software up close. His experience runs from designing pixel perfect websites to architecting the complex backend systems that power them, so he cares as much about how something feels as how it scales.</p>
+        <p>He loves taking a big idea, breaking it down to its core, and building something powerful, scalable, and genuinely helpful. He's a firm believer that the best technology builds community and creates real human connection, and that belief sits at the heart of everything the studio makes. It guides the code he writes, the experiences he designs, and the way he works with the people he builds for.</p>
+        <p>When he isn't logged in, you can usually find him with his family, out on a mountain bike trail, or exploring local coffee shops. He loves the way independent shops build community, put down deep roots, and give people a real place to connect.</p>
+      </div>
+
+      <p class="mt-12 font-mono text-sm">
+        <a href="/contact" class="text-accent">Get in touch →</a>
+      </p>
     </div>
-
-    <h2 class="text-2xl mt-16 mb-6">The work</h2>
-    <ul class="flex flex-col gap-6 list-none m-0 p-0">
-      <li>
-        <span class="font-mono text-sm text-accent">agentic systems &amp; orchestration</span>
-        <div class="text-muted mt-1">Design, build, and tuning for AI agents and the workflows that coordinate them, so they hold up in production rather than just demo well. Backed by a multi-agent platform already running real businesses — daily practice, not theory.</div>
-      </li>
-      <li>
-        <span class="font-mono text-sm text-accent">product &amp; client builds</span>
-        <div class="text-muted mt-1">From first prototype to shipped software. Some of it runs in-house; some is designed and handed off cleanly.</div>
-      </li>
-    </ul>
-
-    <h2 class="text-2xl mt-16 mb-6">How it works</h2>
-    <ol class="flex flex-col gap-6 list-none m-0 p-0">
-      <li><span class="font-mono text-sm text-accent">01 · build</span><div class="text-muted mt-1">Start from the actual problem. Pick the smallest thing that proves the idea, then make it real.</div></li>
-      <li><span class="font-mono text-sm text-accent">02 · ship</span><div class="text-muted mt-1">Put it in front of real users and real load. Refine the flows people touch most.</div></li>
-      <li><span class="font-mono text-sm text-accent">03 · support</span><div class="text-muted mt-1">Stand behind it. Keep measuring, keep improving, or hand it off cleanly.</div></li>
-    </ol>
-
-    <p class="mt-12 font-mono text-sm">
-      <a href="/contact" class="text-accent">Get in touch →</a>
-    </p>
   </section>
 </Layout>

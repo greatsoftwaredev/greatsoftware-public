@@ -7,13 +7,13 @@ const services = [
   {
     k: "ai consulting",
     t: "Agentic systems & orchestration",
-    d: "Design, build, and tuning for AI agents and the workflows that coordinate them — systems reliable enough to run in production, not just demo well. Backed by a multi-agent platform already running real businesses, so it's daily practice, not theory.",
+    d: "Design, build, and tuning for AI agents and the workflows that coordinate them, with one goal: systems reliable enough to run in production, not just demo well. Backed by a multi-agent platform already running real businesses, so it's daily practice, not theory.",
     cta: "Talk through a project",
   },
   {
     k: "custom builds",
     t: "Product & client builds",
-    d: "From first prototype to shipped software. Every build starts from the real problem, proves it with the smallest version that works, and meets real users and real load early — before the polish goes on.",
+    d: "From first prototype to shipped software. Every build starts from the real problem, proves it with the smallest version that works, and meets real users and real load early, before the polish goes on.",
     cta: "Start a build",
   },
 ];
@@ -40,7 +40,7 @@ const products = [
 
 const steps = [
   { t: "Build", d: "Start with the actual problem, not a feature list. Build the smallest version that proves the idea is real, and get it working end to end before any polish goes on." },
-  { t: "Ship", d: "Put it in front of real users and real production load, where the rough edges actually show. Then refine the parts people touch most — the flows, the speed, and the small moments that decide whether they trust it." },
+  { t: "Ship", d: "Put it in front of real users and real production load, where the rough edges actually show. Then refine the parts people touch most: the flows, the speed, and the small moments that decide whether they trust it." },
   { t: "Support", d: "Stand behind what ships and keep it healthy as it grows, fixing and tuning as real usage reveals what matters. When a project is ready to stand on its own, hand it off cleanly with everything documented." },
 ];
 ---
@@ -53,7 +53,7 @@ const steps = [
     <p class="text-muted max-w-2xl mb-8">An independent studio with a deliberately wide range. The common thread isn't one product or one market, it's range, and doing each kind of work well.</p>
     <div class="grid gap-6 md:grid-cols-2">
       {services.map((s) => (
-        <article class="group rounded-xl border border-line bg-paper p-6 transition-colors duration-200 hover:border-accent flex flex-col gap-3">
+        <article class="group rounded-xl border border-line bg-paper p-6 transition-[border-color] duration-200 hover:border-accent flex flex-col gap-3">
           <span class="font-mono text-sm text-accent">{s.k}</span>
           <h3 class="text-xl m-0">{s.t}</h3>
           <p class="text-muted m-0">{s.d}</p>
