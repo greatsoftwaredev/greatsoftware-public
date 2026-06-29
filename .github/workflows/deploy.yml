@@ -25,6 +25,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # Public (non-secret) build config for the /messaging SMS opt-in form.
+          # Set as repo Actions VARIABLES (Settings → Secrets and variables → Actions →
+          # Variables). Until set, the form renders but shows "not configured".
+          PUBLIC_CONSENT_ENDPOINT: ${{ vars.PUBLIC_CONSENT_ENDPOINT }}
+          PUBLIC_TURNSTILE_SITEKEY: ${{ vars.PUBLIC_TURNSTILE_SITEKEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
