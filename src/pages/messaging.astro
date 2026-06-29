@@ -1,0 +1,142 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site } from "../config/site";
+// The exact express-consent text. MUST stay in sync with CONSENT_TEXT/CONSENT_VERSION
+// in tenet's consent-worker (src/index.ts), which stores the canonical copy as proof.
+const consentText =
+  "I agree to receive recurring SMS lead-notification text messages from Great Software at the mobile number I provided. Message frequency varies with lead activity. Message and data rates may apply. Reply STOP to opt out, HELP for help. Consent is not a condition of any purchase. See the Messaging Terms and Privacy Policy.";
+---
+<Layout title="SMS Messaging Program & Opt-In" description="Great Software SMS lead-notification program: how business clients opt in, disclosures, and consent.">
+  <section class="mx-auto max-w-3xl px-6 pt-24 pb-16">
+    <p class="font-mono text-sm text-accent mb-4">Messaging</p>
+    <h1 class="text-4xl md:text-5xl tracking-tight">SMS Lead-Notification Program</h1>
+
+    <div class="legal mt-8 flex flex-col gap-5 text-muted">
+      <p><strong>{site.name}</strong> sends <strong>transactional</strong> SMS lead alerts (Account
+        Notification and Customer Care) to our contracted business clients, notifying them of new leads
+        (website form submissions and missed phone calls) captured on the lead-generation websites we
+        operate for them. This is not a marketing program and there is no consumer messaging.</p>
+
+      <h2>Who receives messages &amp; how they opt in</h2>
+      <p>Only our own business clients (local home-service companies) are messaged. A client opts in to
+        SMS by submitting the consent form below with their business mobile number and checking the SMS
+        consent box. <strong>SMS consent is for text messages only and is not a condition of any
+        purchase or of using our services.</strong></p>
+
+      <h2>Program disclosures</h2>
+      <ul>
+        <li><strong>Message frequency</strong> varies with lead activity.</li>
+        <li><strong>Message and data rates may apply.</strong></li>
+        <li>Reply <strong>STOP</strong> to opt out at any time; reply <strong>HELP</strong> for help, or
+          contact us at <a href={site.mailHref}>{site.email}</a> / <a href={site.phoneHref}>{site.phone}</a>.</li>
+        <li>We <strong>do not sell or share</strong> mobile numbers or SMS opt-in/consent data with third
+          parties for marketing. See our <a href="/privacy">Privacy Policy</a> and
+          <a href="/terms">Messaging Terms</a>.</li>
+      </ul>
+
+      <h2>Sample messages</h2>
+      <ul>
+        <li>"Great Software: New web lead — Jane Doe, (555) 123-4567. 'Need a quote for crawl space
+          encapsulation' — via examplesite.com Txt STOP to opt out."</li>
+        <li>"Great Software: Missed lead from (555) 987-6543 on your foundation repair site at 2:14pm.
+          Txt STOP to opt out."</li>
+      </ul>
+    </div>
+
+    <!-- Consent form -->
+    <div class="mt-10 rounded-xl border border-line bg-paper p-6 sm:p-8">
+      <h2 class="text-2xl tracking-tight">SMS consent</h2>
+      <p class="mt-2 text-muted">Business clients: opt in to lead-alert texts here.</p>
+
+      <form id="consent-form" class="mt-6 flex flex-col gap-4">
+        <!-- Honeypot: real users never fill this; bots often do. -->
+        <input type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true"
+          style="position:absolute;left:-9999px" />
+
+        <label class="flex flex-col gap-1">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Business name</span>
+          <input name="business_name" autocomplete="organization"
+            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+        </label>
+        <label class="flex flex-col gap-1">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Your name</span>
+          <input name="contact_name" autocomplete="name"
+            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+        </label>
+        <label class="flex flex-col gap-1">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Mobile number *</span>
+          <input name="phone" type="tel" autocomplete="tel" required
+            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+        </label>
+        <label class="flex flex-col gap-1">
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Email (optional)</span>
+          <input name="email" type="email" autocomplete="email"
+            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+        </label>
+
+        <label class="flex items-start gap-3 mt-2">
+          <input type="checkbox" name="consent" required class="mt-1.5" />
+          <span class="text-sm text-muted">{consentText}</span>
+        </label>
+
+        {site.turnstileSitekey && (
+          <div class="cf-turnstile" data-sitekey={site.turnstileSitekey} data-appearance="interaction-only"></div>
+        )}
+
+        <button type="submit"
+          class="mt-2 rounded-md bg-ink px-5 py-2.5 font-medium text-bg hover:opacity-90 disabled:opacity-60">
+          Opt in to SMS alerts
+        </button>
+        <p id="consent-status" class="text-sm" hidden></p>
+      </form>
+    </div>
+  </section>
+
+  {site.turnstileSitekey && (
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  )}
+  <script define:vars={{ endpoint: site.consentEndpoint }}>
+    const form = document.getElementById("consent-form");
+    const status = document.getElementById("consent-status");
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector("button[type=submit]");
+      const setStatus = (msg, ok) => {
+        if (!status) return;
+        status.textContent = msg;
+        status.style.color = ok ? "var(--color-accent, green)" : "crimson";
+        status.hidden = false;
+      };
+      if (!endpoint) { setStatus("Form is not configured yet — please email us.", false); return; }
+      btn.disabled = true;
+      status && (status.hidden = true);
+      const fd = new FormData(form);
+      const token = fd.get("cf-turnstile-response");
+      const payload = {
+        business_name: fd.get("business_name"),
+        contact_name: fd.get("contact_name"),
+        phone: fd.get("phone"),
+        email: fd.get("email"),
+        consent: fd.get("consent") === "on",
+        hp: fd.get("hp"),
+        turnstileToken: token,
+      };
+      try {
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error("failed");
+        form.reset();
+        window.turnstile?.reset?.();
+        setStatus("Thanks — you're opted in to lead alerts. Reply STOP anytime to opt out.", true);
+      } catch {
+        setStatus("Something went wrong — please try again or email us.", false);
+        window.turnstile?.reset?.();
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</Layout>

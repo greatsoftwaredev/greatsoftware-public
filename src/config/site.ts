@@ -16,6 +16,11 @@ export const site = {
   mailHref: `mailto:${RAW_EMAIL}`,
   /** tel: href with non-digits stripped, +1 prefixed */
   phoneHref: `tel:+1${RAW_PHONE.replace(/\D/g, "")}`,
+  /** SMS-consent form backend (the tenet consent-worker). Set PUBLIC_CONSENT_ENDPOINT
+   *  at build to the deployed Worker URL (https://tenet-consent-worker.<sub>.workers.dev). */
+  consentEndpoint: import.meta.env.PUBLIC_CONSENT_ENDPOINT ?? "",
+  /** Cloudflare Turnstile site key for the consent form (PUBLIC_TURNSTILE_SITEKEY at build). */
+  turnstileSitekey: import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "",
 } as const;
 
 export type Site = typeof site;
