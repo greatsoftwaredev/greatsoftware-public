@@ -85,8 +85,11 @@ const consentText =
             class="rounded-md border border-line bg-sky px-3 py-2 text-ink" />
         </label>
 
+        <!-- Consent is OPTIONAL and unchecked by default: carriers reject a mandatory
+             consent checkbox beside a mandatory phone field as "forced opt-in". You can
+             submit without checking it; we simply won't subscribe you. -->
         <label class="flex items-start gap-3 mt-2">
-          <input type="checkbox" name="consent" required class="mt-1.5" />
+          <input id="consent" type="checkbox" name="consent" class="mt-1.5" />
           <span class="text-sm text-muted">{consentText}</span>
         </label>
 
@@ -171,6 +174,14 @@ const consentText =
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error("failed");
+        const out = await res.json().catch(() => ({}));
+        // Consent is optional: only show the opted-in success state when we actually
+        // subscribed them. An unchecked box → a neutral nudge, form stays so they can opt in.
+        if (out && out.opted_in === false) {
+          setStatus("Check the box above to opt in to lead-alert texts — that step is required to receive them.", false);
+          window.turnstile?.reset?.();
+          return;
+        }
         // Replace the whole form with the success state.
         const body = document.getElementById("consent-body");
         const success = document.getElementById("consent-success");
