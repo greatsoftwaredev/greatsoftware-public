@@ -3,8 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import LegalPage from "../components/LegalPage.astro";
 import { site } from "../config/site";
 ---
-<Layout title="Terms & Messaging Terms" description="Great Software service terms and SMS messaging terms.">
-  <LegalPage title="Terms & Messaging Terms" updated={site.legalUpdated}>
+<Layout title="Terms" description="Great Software service terms. SMS messaging terms are on the Messaging page.">
+  <LegalPage title="Terms" updated={site.legalUpdated}>
     <p>These terms govern your use of {site.domain} and the services {site.name} provides. By engaging our services, you agree to these terms.</p>
 
     <h2>Services</h2>
@@ -13,9 +13,8 @@ import { site } from "../config/site";
     <h2>Acceptable use</h2>
     <p>You agree not to misuse our services, interfere with their operation, or use them for unlawful purposes.</p>
 
-    <h2>SMS Program — Messaging Terms</h2>
-    <p>{site.name} sends transactional lead-notification texts to business clients who have opted in by providing their mobile number and agreeing to these terms when they engage our services. Messages notify the client of new leads (phone calls and website form submissions) on the sites we run for them. Frequency varies with lead activity; message &amp; data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. We honor opt-outs immediately and do not sell or share opt-in data for marketing (see our <a href="/privacy">Privacy Policy</a>). Full program details and the opt-in form are on our <a href="/messaging">SMS messaging program</a> page.</p>
-    <p>For help with messaging, contact us at <a href={site.mailHref}>{site.email}</a> or <a href={site.phoneHref}>{site.phone}</a>.</p>
+    <h2>SMS messaging</h2>
+    <p>{site.name} operates an SMS lead-notification program for its business clients. The full Messaging Terms, program disclosures (frequency, message &amp; data rates, STOP/HELP), and the opt-in form live on our <a href="/messaging">Messaging</a> page. We do not sell or share opt-in data for marketing; see our <a href="/privacy">Privacy Policy</a>.</p>
 
     <h2>Disclaimers &amp; liability</h2>
     <p>Our services are provided "as is" to the extent permitted by law. We are not liable for indirect or consequential damages arising from use of the services.</p>

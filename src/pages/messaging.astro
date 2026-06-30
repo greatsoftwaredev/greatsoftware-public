@@ -30,8 +30,7 @@ const consentText =
         <li>Reply <strong>STOP</strong> to opt out at any time; reply <strong>HELP</strong> for help, or
           contact us at <a href={site.mailHref}>{site.email}</a> / <a href={site.phoneHref}>{site.phone}</a>.</li>
         <li>We <strong>do not sell or share</strong> mobile numbers or SMS opt-in/consent data with third
-          parties for marketing. See our <a href="/privacy">Privacy Policy</a> and
-          <a href="/terms">Messaging Terms</a>.</li>
+          parties for marketing. See our <a href="/privacy">Privacy Policy</a>.</li>
       </ul>
 
       <h2>Sample messages</h2>
@@ -41,6 +40,15 @@ const consentText =
         <li>"Great Software: Missed lead from (555) 987-6543 on your foundation repair site at 2:14pm.
           Txt STOP to opt out."</li>
       </ul>
+
+      <h2>Messaging Terms</h2>
+      <p>{site.name} sends transactional lead-notification texts to business clients who have opted in by
+        providing their mobile number and giving express consent (via the form below or during onboarding).
+        Messages notify the client of new leads (phone calls and website form submissions) on the sites we
+        run for them. Frequency varies with lead activity; message &amp; data rates may apply. Reply
+        <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. We honor opt-outs immediately and
+        do not sell or share opt-in data for marketing.</p>
+      <p>For help with messaging, contact us at <a href={site.mailHref}>{site.email}</a> or <a href={site.phoneHref}>{site.phone}</a>. These Messaging Terms supplement our general <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
     </div>
 
     <!-- Consent form -->
