@@ -45,14 +45,15 @@ const consentText =
       <p>{site.name} sends transactional lead-notification texts to business clients who have opted in by
         providing their mobile number and giving express consent (via the form below or during onboarding).
         Messages notify the client of new leads (phone calls and website form submissions) on the sites we
-        run for them. Frequency varies with lead activity; message &amp; data rates may apply. Reply
-        <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. We honor opt-outs immediately and
+        run for them. Frequency varies with lead activity; message &amp; data rates may apply.
+        Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. We honor opt-outs immediately and
         do not sell or share opt-in data for marketing.</p>
       <p>For help with messaging, contact us at <a href={site.mailHref}>{site.email}</a> or <a href={site.phoneHref}>{site.phone}</a>. These Messaging Terms supplement our general <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.</p>
     </div>
 
     <!-- Consent form -->
     <div class="mt-10 rounded-xl border border-line bg-paper p-6 sm:p-8">
+      <div id="consent-body">
       <h2 class="text-2xl tracking-tight">SMS consent</h2>
       <p class="mt-2 text-muted">Business clients: opt in to lead-alert texts here.</p>
 
@@ -99,6 +100,16 @@ const consentText =
         </button>
         <p id="consent-status" class="text-sm" hidden></p>
       </form>
+      </div>
+
+      <!-- Success state: replaces the form on a successful opt-in. -->
+      <div id="consent-success" hidden class="flex flex-col items-center gap-3 py-6 text-center">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-ink text-2xl">✓</div>
+        <h2 class="text-2xl tracking-tight">You're opted in</h2>
+        <p class="text-muted max-w-md">Thanks — you'll receive lead-alert texts from Great Software at the
+          number you provided. Message frequency varies with lead activity; message &amp; data rates may
+          apply. Reply <strong>STOP</strong> anytime to opt out, <strong>HELP</strong> for help.</p>
+      </div>
     </div>
   </section>
 
@@ -160,9 +171,11 @@ const consentText =
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error("failed");
-        form.reset();
-        window.turnstile?.reset?.();
-        setStatus("Thanks — you're opted in to lead alerts. Reply STOP anytime to opt out.", true);
+        // Replace the whole form with the success state.
+        const body = document.getElementById("consent-body");
+        const success = document.getElementById("consent-success");
+        if (body && success) { body.hidden = true; success.hidden = false; success.scrollIntoView({ behavior: "smooth", block: "center" }); }
+        else { setStatus("Thanks — you're opted in. Reply STOP anytime to opt out.", true); }
       } catch {
         setStatus("Something went wrong — please try again or email us.", false);
         window.turnstile?.reset?.();
