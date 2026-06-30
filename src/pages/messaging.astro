@@ -56,22 +56,24 @@ const consentText =
         <label class="flex flex-col gap-1">
           <span class="font-mono text-xs uppercase tracking-wider text-muted">Business name</span>
           <input name="business_name" autocomplete="organization"
-            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+            class="rounded-md border border-line bg-sky px-3 py-2 text-ink" />
         </label>
         <label class="flex flex-col gap-1">
-          <span class="font-mono text-xs uppercase tracking-wider text-muted">Your name</span>
+          <span class="font-mono text-xs uppercase tracking-wider text-muted">Your Full Name</span>
           <input name="contact_name" autocomplete="name"
-            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+            class="rounded-md border border-line bg-sky px-3 py-2 text-ink" />
         </label>
         <label class="flex flex-col gap-1">
           <span class="font-mono text-xs uppercase tracking-wider text-muted">Mobile number *</span>
-          <input name="phone" type="tel" autocomplete="tel" required
-            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+          <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required
+            placeholder="(555) 123-4567" maxlength="14" aria-describedby="phone-hint"
+            class="rounded-md border border-line bg-sky px-3 py-2 text-ink" />
+          <span id="phone-hint" class="text-xs text-muted">US mobile number.</span>
         </label>
         <label class="flex flex-col gap-1">
           <span class="font-mono text-xs uppercase tracking-wider text-muted">Email (optional)</span>
           <input name="email" type="email" autocomplete="email"
-            class="rounded-md border border-line bg-bg px-3 py-2 text-ink" />
+            class="rounded-md border border-line bg-sky px-3 py-2 text-ink" />
         </label>
 
         <label class="flex items-start gap-3 mt-2">
@@ -84,7 +86,7 @@ const consentText =
         )}
 
         <button type="submit"
-          class="mt-2 rounded-md bg-ink px-5 py-2.5 font-medium text-bg hover:opacity-90 disabled:opacity-60">
+          class="mt-2 rounded-lg bg-accent px-5 py-3 font-mono text-sm text-accent-ink hover:opacity-90 transition-opacity duration-200 disabled:opacity-60">
           Opt in to SMS alerts
         </button>
         <p id="consent-status" class="text-sm" hidden></p>
@@ -98,6 +100,27 @@ const consentText =
   <script define:vars={{ endpoint: site.consentEndpoint }}>
     const form = document.getElementById("consent-form");
     const status = document.getElementById("consent-status");
+    const phone = document.getElementById("phone");
+
+    // Live mask → (XXX) XXX-XXXX as the user types (US format).
+    const formatUsPhone = (v) => {
+      const d = v.replace(/\D/g, "").slice(0, 10);
+      if (d.length <= 3) return d;
+      if (d.length <= 6) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+      return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+    };
+    phone?.addEventListener("input", () => { phone.value = formatUsPhone(phone.value); });
+
+    // Mirror the server's plausibility gate so the user gets instant feedback.
+    const plausibleUs = (v) => {
+      const d = v.replace(/\D/g, "");
+      if (d.length !== 10) return false;
+      if (/^(\d)\1{9}$/.test(d)) return false;            // all same digit
+      if (!/[2-9]/.test(d[0]) || !/[2-9]/.test(d[3])) return false; // NANP leading digits
+      if (d.slice(0, 3) === "555" || d.slice(3, 6) === "555") return false;
+      return true;
+    };
+
     form?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = form.querySelector("button[type=submit]");
@@ -108,6 +131,7 @@ const consentText =
         status.hidden = false;
       };
       if (!endpoint) { setStatus("Form is not configured yet — please email us.", false); return; }
+      if (!plausibleUs(phone?.value ?? "")) { setStatus("Please enter a valid US mobile number.", false); phone?.focus(); return; }
       btn.disabled = true;
       status && (status.hidden = true);
       const fd = new FormData(form);
