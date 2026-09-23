@@ -34,7 +34,7 @@ for (const [name, content] of Object.entries(pages)) {
 check("home: tagline", pages.home.includes("A whole range of software"));
 check("home: Tenet", pages.home.includes("Tenet"));
 check("home: Changesets", pages.home.includes("Changesets for VS Code"));
-check("home: Meld", pages.home.includes("Meld"));
+check("home: no Meld", !pages.home.includes("Meld"));
 check("home: time-of-day backdrop", pages.home.includes("data-backdrop"));
 check("home: auto time-of-day", pages.home.includes("--tod"));
 check("home: night scene", pages.home.includes("data-glow-night"));
