@@ -23,6 +23,7 @@ const pages = {
   privacy: html("dist/privacy/index.html"),
   terms: html("dist/terms/index.html"),
   contact: html("dist/contact/index.html"),
+  messaging: html("dist/messaging/index.html"),
 };
 
 // pages exist
@@ -34,21 +35,27 @@ for (const [name, content] of Object.entries(pages)) {
 check("home: tagline", pages.home.includes("A whole range of software"));
 check("home: Tenet", pages.home.includes("Tenet"));
 check("home: Changesets", pages.home.includes("Changesets for VS Code"));
-check("home: Meld", pages.home.includes("Meld"));
+check("home: no Meld", !pages.home.includes("Meld"));
 check("home: time-of-day backdrop", pages.home.includes("data-backdrop"));
 check("home: auto time-of-day", pages.home.includes("--tod"));
 check("home: night scene", pages.home.includes("data-glow-night"));
 check("home: theme toggle", pages.home.includes("data-theme-toggle"));
 
 // 10DLC compliance — Privacy
-check("privacy: no-share clause", pages.privacy.includes("do not share or sell"));
+check("privacy: no-share clause", pages.privacy.includes("will not share your opt-in to an SMS campaign with any third party"));
 check("privacy: STOP", pages.privacy.includes("STOP"));
 check("privacy: HELP", pages.privacy.includes("HELP"));
-check("privacy: Telnyx", pages.privacy.includes("Telnyx"));
+check("privacy: opt-in data excluded from sharing", pages.privacy.includes("this information will not be shared with any third parties"));
 
 // 10DLC compliance — Terms
-check("terms: SMS Program", pages.terms.includes("SMS Program"));
+check("terms: links to Messaging Terms", pages.terms.includes('href="/messaging"'));
 check("terms: opt-out clause", pages.terms.includes("do not sell or share opt-in data"));
+
+// 10DLC compliance — Messaging (authoritative Messaging Terms)
+check("messaging: Messaging Terms", pages.messaging.includes("Messaging Terms"));
+check("messaging: no-sell clause", pages.messaging.includes("do not sell or share"));
+check("messaging: STOP", pages.messaging.includes("STOP"));
+check("messaging: HELP", pages.messaging.includes("HELP"));
 
 // contact config flows through (phone + email)
 check("privacy: contact phone", pages.privacy.includes("(801) 877-0447"));

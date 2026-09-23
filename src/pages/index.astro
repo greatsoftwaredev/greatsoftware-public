@@ -31,11 +31,6 @@ const products = [
     link: "https://open-vsx.org/extension/GreatSoftwareLLC/vscode-changesets",
     linkText: "View on Open VSX →",
   },
-  {
-    title: "Meld",
-    description: "A couples app focused on closeness, where matching on what you both want takes the pressure off. Two people. One toggle. Zero rejection.",
-    status: "coming-soon" as const,
-  },
 ];
 
 const steps = [
@@ -66,7 +61,7 @@ const steps = [
   <!-- Products -->
   <section id="products" class="mx-auto max-w-6xl px-6 py-12 scroll-mt-20">
     <h2 class="text-3xl mb-8">Products &amp; ventures</h2>
-    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-6 sm:grid-cols-2">
       {products.map((p) => <ProductCard {...p} />)}
     </div>
   </section>
